@@ -51,5 +51,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec_junit_formatter", "0.2.2"
   spec.add_development_dependency "simplecov"
 
+  spec.add_runtime_dependency "activerecord-import"
   spec.add_runtime_dependency "sidekiq"
 end
