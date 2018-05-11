@@ -2,9 +2,12 @@ $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "simplecov"
 SimpleCov.start
 
+require "active_job"
 require "sidekiq_publisher"
+require "active_job/queue_adapters/sidekiq_publisher_adapter"
 
 require "database_cleaner"
+require "shoulda-matchers"
 
 logger = Logger.new("log/test.log", level: :debug)
 ActiveRecord::Base.logger = logger
@@ -55,5 +58,13 @@ RSpec.configure do |config|
 
   config.after do
     DatabaseCleaner.clean
+  end
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :active_model
+    with.library :active_record
   end
 end
