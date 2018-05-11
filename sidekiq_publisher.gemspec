@@ -44,12 +44,14 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.12"
-  spec.add_development_dependency "ezcater_rubocop"
+  spec.add_development_dependency "database_cleaner"
+  spec.add_development_dependency "ezcater_rubocop", "~> 0.52.6"
   spec.add_development_dependency "overcommit"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.4"
   spec.add_development_dependency "rspec_junit_formatter", "0.2.2"
   spec.add_development_dependency "simplecov"
 
+  spec.add_runtime_dependency "activerecord-postgres_pub_sub"
   spec.add_runtime_dependency "sidekiq"
 end
