@@ -15,7 +15,6 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
 
   # Set "allowed_push_post" to control where this gem can be published.
-  # rubocop:disable Style/GuardClause
   if spec.respond_to?(:metadata)
     spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
@@ -37,7 +36,7 @@ Gem::Specification.new do |spec|
                       Rakefile)
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
+    f.match(/^(test|spec|features)\//)
   end - excluded_files
   spec.bindir        = "bin"
   spec.executables   = []

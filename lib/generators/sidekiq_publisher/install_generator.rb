@@ -8,7 +8,7 @@ module SidekiqPublisher
   class InstallGenerator < Rails::Generators::Base
     include ActiveRecord::Generators::Migration
 
-    TEMPLATE_FILE = "create_sidekiq_publisher_jobs.rb".freeze
+    TEMPLATE_FILE = "create_sidekiq_publisher_jobs.rb"
 
     source_paths << File.join(__dir__, "templates")
 

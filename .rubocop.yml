@@ -1,2 +1,6 @@
 inherit_gem:
   ezcater_rubocop: conf/rubocop.yml
+
+Lint/UnneededDisable:
+  Exclude:
+    - "lib/generators/sidekiq_publisher/templates/create_sidekiq_publisher_jobs.rb"
