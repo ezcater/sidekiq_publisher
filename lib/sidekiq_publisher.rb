@@ -1,5 +1,5 @@
 require "sidekiq_publisher/version"
+require "sidekiq_publisher/job"
 
-# Top-level gem module
 module SidekiqPublisher
 end
