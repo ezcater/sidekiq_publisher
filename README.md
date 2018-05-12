@@ -16,7 +16,7 @@ publisher process handles retries and ensure that each job is delivered to Sidek
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'sidekiq_publisher'
+gem "sidekiq_publisher"
 ```
 
 And then execute:
@@ -34,7 +34,38 @@ Run the generator to create migrations for the jobs table and notifications:
     
 ## Usage
 
-TODO: Write usage instructions here
+### ActiveJob Adapter
+
+This gem includes an adapter to use `SidekiqPublisher` with `ActiveJob`. This
+adapter must be explicitly required:
+
+```ruby
+require "active_job/queue_adapters/sidekiq_publisher_adapter"
+```
+
+The adapter can also be required via your Gemfile:
+
+```ruby
+gem "sidekiq_publisher", require: ["sidekiq_publisher", "active_job/queue_adapters/sidekiq_publisher_adapter"]
+```
+
+The adapter to use with `ActiveJob` must be specified in Rails configuration
+
+```ruby
+# application.rb
+config.active_job.queue_adapter = :sidekiq_publisher
+
+# or directly in configuration
+Rails.application.config.active_job.queue_adapter = :sidekiq_publisher
+```
+
+### SidekiqPublisher::Worker
+
+Sidekiq workers are usually defined by including `Sidekiq::Worker` in a class.
+
+To use the `SidekiqPublisher`, this can be replaced by including
+`SidekiqPublisher::Worker`. The usual `perform_async`, etc methods will be
+available on the class but jobs will be staged in the Postgres table.
 
 ## Development
 
