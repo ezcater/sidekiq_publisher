@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ActiveJob::QueueAdapters::SidekiqPublisherAdapter do
   let(:job_class) do
     Class.new(ActiveJob::Base) do

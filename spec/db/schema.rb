@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 ActiveRecord::Schema.define do
-  TABLE_NAME = "sidekiq_publisher_jobs".freeze
-  NOTIFICATION_NAME = "sidekiq_publisher_job".freeze
-  TABLE_MODULE = "sidekiq_publisher".freeze
+  TABLE_NAME = "sidekiq_publisher_jobs"
+  NOTIFICATION_NAME = "sidekiq_publisher_job"
+  TABLE_MODULE = "sidekiq_publisher"
 
   create_table(:sidekiq_publisher_jobs, id: :bigserial) do |t|
     t.string :job_id, null: false

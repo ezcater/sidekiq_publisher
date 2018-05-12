@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "simplecov"
 SimpleCov.start
@@ -12,7 +14,7 @@ require "shoulda-matchers"
 logger = Logger.new("log/test.log", level: :debug)
 ActiveRecord::Base.logger = logger
 
-DATABASE_NAME = "sidekiq_publisher_test".freeze
+DATABASE_NAME = "sidekiq_publisher_test"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
