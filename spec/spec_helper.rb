@@ -7,10 +7,12 @@ require "sidekiq_publisher"
 require "active_job/queue_adapters/sidekiq_publisher_adapter"
 
 require "database_cleaner"
+require "factory_bot"
 require "shoulda-matchers"
 
 logger = Logger.new("log/test.log", level: :debug)
 ActiveRecord::Base.logger = logger
+SidekiqPublisher.logger = logger
 
 DATABASE_NAME = "sidekiq_publisher_test".freeze
 
@@ -28,6 +30,12 @@ RSpec.configure do |config|
   config.default_formatter = "doc" if config.files_to_run.one?
   config.order = :random
   Kernel.srand config.seed
+
+  config.include FactoryBot::Syntax::Methods
+
+  config.before(:suite) do
+    FactoryBot.find_definitions
+  end
 
   config.before(:suite) do
     pg_version = `psql -t -c "select version()";`.strip
