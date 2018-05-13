@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "sidekiq_publisher/version"
 require "sidekiq_publisher/job"
 require "sidekiq_publisher/worker"

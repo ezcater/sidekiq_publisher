@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SidekiqPublisher::Job, type: :model do
   let(:job_class) { Class.new }
   let(:job_id) { described_class.generate_sidekiq_jid }

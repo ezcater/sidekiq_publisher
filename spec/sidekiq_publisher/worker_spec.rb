@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SidekiqPublisher::Worker do
   let(:worker_class) do
     Class.new do
