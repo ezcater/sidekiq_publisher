@@ -18,6 +18,11 @@ SidekiqPublisher.logger = logger
 
 DATABASE_NAME = "sidekiq_publisher_test"
 
+require "redis-namespace"
+Sidekiq.configure_client do |config|
+  config.redis = { namespace: "sidekiq_publisher_test", url: "redis://localhost:6379" }
+end
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
