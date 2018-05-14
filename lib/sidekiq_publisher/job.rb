@@ -31,11 +31,12 @@ module SidekiqPublisher
     end
 
     def self.purge_expired_published!
-      SidekiqPublisher.logger.info("#{name} purging expired published messages.")
-      purgeable.delete_all
+      SidekiqPublisher.logger.info("#{name} purging expired published jobs.")
+      count = purgeable.delete_all
+      SidekiqPublisher.logger.info("#{name} purged #{count} expired published jobs.")
     end
 
-    def self.unpublished_batches(batch_size:)
+    def self.unpublished_batches(batch_size: SidekiqPublisher.batch_size)
       unpublished.in_batches(of: batch_size, load: false) do |relation|
         batch = relation.pluck(*BATCH_KEYS)
         yield batch.map { |values| Hash[BATCH_KEYS.zip(values)] }
