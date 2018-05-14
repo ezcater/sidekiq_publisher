@@ -4,7 +4,7 @@ require "private_attr"
 require "sidekiq_publisher/version"
 require "sidekiq_publisher/job"
 require "sidekiq_publisher/worker"
-require "sidekiq_publisher/client"
+require "sidekiq_publisher/publisher"
 
 module SidekiqPublisher
   DEFAULT_BATCH_SIZE = 100
@@ -26,6 +26,7 @@ module SidekiqPublisher
     def reset!
       @batch_size = nil
       @job_retention_period = nil
+      @exception_reporter = nil
     end
   end
 end
