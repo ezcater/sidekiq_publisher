@@ -31,6 +31,17 @@ Or install it yourself as:
 Run the generator to create migrations for the jobs table and notifications:
 
     $ rails generate sidekiq_publisher:install
+
+## Configuration
+
+This gem uses the following configuration:
+
+* **logger**: the logger for this gem to use.
+* **exception_reporter**: a Proc that will be called with an exception
+* **batch_size**: the maximum number of jobs that will be enqueued to Sidekiq
+  together
+* **job_retention_period**: the duration that published jobs will be kept in
+  Postgres after they have been enqueued to Sidekiq
     
 ## Usage
 
