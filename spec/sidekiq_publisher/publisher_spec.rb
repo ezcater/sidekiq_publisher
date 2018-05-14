@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SidekiqPublisher::Publisher do
   let(:client) { instance_double(SidekiqPublisher::Client) }
   let(:publisher) { described_class.new }
