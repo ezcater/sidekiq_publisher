@@ -12,6 +12,7 @@ jobs:
         environment:
           - POSTGRES_USER: postgres
           - POSTGRES_DB: sidekiq_publisher_test
+      - image: redis:2.8
     steps:
       - checkout
 
