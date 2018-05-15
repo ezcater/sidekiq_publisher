@@ -11,6 +11,7 @@ require "active_job/queue_adapters/sidekiq_publisher_adapter"
 require "database_cleaner"
 require "factory_bot"
 require "shoulda-matchers"
+require "ezcater_matchers"
 
 logger = Logger.new("log/test.log", level: :debug)
 ActiveRecord::Base.logger = logger
@@ -18,7 +19,6 @@ SidekiqPublisher.logger = logger
 
 DATABASE_NAME = "sidekiq_publisher_test"
 
-require "redis-namespace"
 Sidekiq.configure_client do |config|
   config.redis = { namespace: "sidekiq_publisher_test", url: "redis://localhost:6379" }
 end
