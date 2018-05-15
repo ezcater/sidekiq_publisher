@@ -5,6 +5,8 @@ require "sidekiq_publisher/version"
 require "sidekiq_publisher/job"
 require "sidekiq_publisher/worker"
 require "sidekiq_publisher/publisher"
+require "sidekiq_publisher/runner"
+require "sidekiq_publisher/railtie" if defined?(Rails)
 
 module SidekiqPublisher
   DEFAULT_BATCH_SIZE = 100

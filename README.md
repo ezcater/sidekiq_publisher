@@ -78,6 +78,15 @@ To use the `SidekiqPublisher`, this can be replaced by including
 `SidekiqPublisher::Worker`. The usual `perform_async`, etc methods will be
 available on the class but jobs will be staged in the Postgres table.
 
+### Running
+
+The publisher process that pulls the job data from postgres and puts them into redis
+can be run with a rake task that is added via railtie for Rails applications:
+
+```bash
+bundle exec rake sidekiq_publisher:publish
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then,
