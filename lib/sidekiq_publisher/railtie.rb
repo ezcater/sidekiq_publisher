@@ -5,5 +5,9 @@ module SidekiqPublisher
     rake_tasks do
       load "sidekiq_publisher/tasks.rake"
     end
+
+    initializer "sidekiq_publisher.configure" do
+      SidekiqPublisher.logger = Rails.logger
+    end
   end
 end
