@@ -100,7 +100,7 @@ RSpec.describe SidekiqPublisher::Job, type: :model do
             run_at: nil,
             queue: nil,
             wrapped: nil,
-            created_at: be_within(10 ** -6).of(job.created_at),
+            created_at: be_within(10**-6).of(job.created_at),
           }
         end
       end
