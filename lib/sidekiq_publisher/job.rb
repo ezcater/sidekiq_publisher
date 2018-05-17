@@ -6,7 +6,7 @@ module SidekiqPublisher
   class Job < ActiveRecord::Base
     self.table_name = "sidekiq_publisher_jobs"
 
-    BATCH_KEYS = %i(id job_id job_class args run_at queue wrapped).freeze
+    BATCH_KEYS = %i(id job_id job_class args run_at queue wrapped created_at).freeze
 
     before_create :ensure_job_id
     before_save :ensure_string_job_class
@@ -41,22 +41,6 @@ module SidekiqPublisher
         batch = relation.pluck(*BATCH_KEYS)
         yield batch.map { |values| Hash[BATCH_KEYS.zip(values)] }
       end
-    end
-
-    # TODO: this method was just for testing and may be removed
-    def publish
-      Sidekiq::Client.push(sidekiq_item)
-    end
-
-    def sidekiq_item
-      {
-        "jid" => job_id,
-        "class" => job_class.constantize,
-        "args" => args,
-        "at" => run_at,
-        "queue" => queue,
-        "wrapped" => wrapped,
-      }.tap(&:compact!)
     end
 
     private

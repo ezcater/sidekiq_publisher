@@ -22,6 +22,7 @@ module SidekiqPublisher
             "at" => job[:run_at],
             "queue" => job[:queue],
             "wrapped" => job[:wrapped],
+            "created_at" => job[:created_at].to_f,
           }.tap(&:compact!)
         end
 
