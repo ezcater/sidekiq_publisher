@@ -25,7 +25,12 @@ RSpec.describe SidekiqPublisher::Publisher do
     let(:batch_slices) do
       unpublished_jobs.each_slice(batch_size).map do |slice|
         slice.map do |job|
-          Hash["class" => job.job_class.constantize, "args" => job.args, "jid" => job.job_id]
+          {
+            "class" => job.job_class.constantize,
+            "args" => job.args,
+            "jid" => job.job_id,
+            "created_at" => job.created_at.to_f,
+          }
         end
       end
     end
