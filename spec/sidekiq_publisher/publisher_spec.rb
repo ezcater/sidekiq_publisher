@@ -46,6 +46,15 @@ RSpec.describe SidekiqPublisher::Publisher do
       expect(client).to have_received(:bulk_push).with(batch_slices[1])
     end
 
+    it "caches job class lookup" do
+      allow(ActiveSupport::Inflector).to receive(:constantize).and_call_original
+
+      publisher.publish
+
+      expect(ActiveSupport::Inflector).to have_received(:constantize).with("TestJobClass").once
+      expect(ActiveSupport::Inflector).to have_received(:constantize).with("OtherTestJobClass").once
+    end
+
     it "updates the status of each published job" do
       publisher.publish
 
