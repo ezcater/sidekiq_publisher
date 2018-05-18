@@ -38,11 +38,26 @@ This gem uses the following configuration:
 
 * **logger**: the logger for this gem to use.
 * **exception_reporter**: a Proc that will be called with an exception
+* **metrics_reporter**: an optional object to record metrics. See below.
 * **batch_size**: the maximum number of jobs that will be enqueued to Sidekiq
   together
 * **job_retention_period**: the duration that published jobs will be kept in
   Postgres after they have been enqueued to Sidekiq
     
+### Metrics Reporter
+
+The metrics reporter that can be configured with an object that is expected to
+respond to the following API:
+
+```ruby
+count(metric_name, count)
+```
+
+Metrics will be reported for:
+
+- the number of jobs published in each batch
+- the number of jobs purged
+
 ## Usage
 
 ### ActiveJob Adapter

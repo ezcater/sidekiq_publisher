@@ -13,6 +13,8 @@ require "factory_bot"
 require "shoulda-matchers"
 require "ezcater_matchers"
 
+Dir["#{__dir__}/support/**/*.rb"].sort.each { |f| require f }
+
 logger = Logger.new("log/test.log", level: :debug)
 ActiveRecord::Base.logger = logger
 SidekiqPublisher.logger = logger

@@ -9,11 +9,9 @@ Gem::Specification.new do |spec|
   spec.version       = SidekiqPublisher::VERSION
   spec.authors       = ["ezCater, Inc"]
   spec.email         = ["engineering@ezcater.com"]
-
   spec.summary       = "Publisher for enqueuing jobs to Sidekiq"
   spec.description   = spec.summary
   spec.homepage      = "https://github.com/ezcater/sidekiq_publisher"
-
   spec.license       = "MIT"
 
   # Set "allowed_push_post" to control where this gem can be published.
@@ -23,7 +21,6 @@ Gem::Specification.new do |spec|
   else
     raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
   end
-  # rubocop:enable Style/GuardClause
 
   excluded_files = %w(.circleci/config.yml
                       .github/PULL_REQUEST_TEMPLATE.md
@@ -59,6 +56,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
 
   spec.add_runtime_dependency "activerecord-postgres_pub_sub"
+  spec.add_runtime_dependency "activesupport", "~> 5.1.4"
   spec.add_runtime_dependency "private_attr"
   spec.add_runtime_dependency "sidekiq", "~> 5.0.4"
 end

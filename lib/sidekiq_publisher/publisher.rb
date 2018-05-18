@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sidekiq_publisher/client"
+require "active_support/core_ext/object/try"
 
 module SidekiqPublisher
   class Publisher
@@ -41,7 +42,8 @@ module SidekiqPublisher
     rescue StandardError => ex
       failure_warning(__method__, ex)
     ensure
-      update_jobs_as_published!(batch) if pushed_count.present? && published_count.nil?
+      published_count = update_jobs_as_published!(batch) if pushed_count.present? && published_count.nil?
+      metrics_reporter.try(:count, "sidekiq_publisher:published", published_count)
     end
 
     def update_jobs_as_published!(jobs)
@@ -64,6 +66,10 @@ module SidekiqPublisher
 
     def logger
       SidekiqPublisher.logger
+    end
+
+    def metrics_reporter
+      SidekiqPublisher.metrics_reporter
     end
   end
 end

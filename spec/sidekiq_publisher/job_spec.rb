@@ -56,22 +56,23 @@ RSpec.describe SidekiqPublisher::Job, type: :model do
     let!(:purgeable_job) { create(:purgeable_job) }
     let!(:old_unpublished_job) { create(:old_unpublished_job) }
 
-    before { described_class.purge_expired_published! }
+    it "only deletes purgeable jobs" do
+      described_class.purge_expired_published!
 
-    it "deletes purgeable jobs" do
       expect(described_class.find_by(id: purgeable_job.id)).not_to be_present
-    end
 
-    it "does not delete unpublished jobs" do
       expect(described_class.find_by(id: unpublished_job.id)).to be_present
-    end
-
-    it "does not delete old, unpublished jobs" do
       expect(described_class.find_by(id: old_unpublished_job.id)).to be_present
+      expect(described_class.find_by(id: published_job.id)).to be_present
     end
 
-    it "does not delete recently published jobs" do
-      expect(described_class.find_by(id: published_job.id)).to be_present
+    context "with a metrics_reporter configured" do
+      include_context "metrics_reporter context"
+
+      it "records a metric for the number of jobs purged" do
+        described_class.purge_expired_published!
+        expect(metrics_reporter).to have_received(:try).with(:count, "sidekiq_publisher:purged", 1)
+      end
     end
   end
 
