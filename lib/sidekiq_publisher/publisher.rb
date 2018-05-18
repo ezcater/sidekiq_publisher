@@ -7,10 +7,11 @@ module SidekiqPublisher
   class Publisher
     extend PrivateAttr
 
-    private_attr_reader :client
+    private_attr_reader :client, :job_class_cache
 
     def initialize
       @client = SidekiqPublisher::Client.new
+      @job_class_cache = {}
     end
 
     def publish
@@ -18,7 +19,7 @@ module SidekiqPublisher
         items = batch.map do |job|
           {
             "jid" => job[:job_id],
-            "class" => job[:job_class].constantize,
+            "class" => lookup_job_class(job[:job_class]),
             "args" => job[:args],
             "at" => job[:run_at],
             "queue" => job[:queue],
@@ -44,6 +45,12 @@ module SidekiqPublisher
     ensure
       published_count = update_jobs_as_published!(batch) if pushed_count.present? && published_count.nil?
       metrics_reporter.try(:count, "sidekiq_publisher:published", published_count)
+    end
+
+    def lookup_job_class(name)
+      job_class_cache.fetch(name) do
+        job_class_cache[name] = name.constantize
+      end
     end
 
     def update_jobs_as_published!(jobs)

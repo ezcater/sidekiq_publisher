@@ -1,6 +1,7 @@
 # sidekiq_publisher
 
 ## v0.2.0
+- Add caching for job class constant lookup.
 - Add metrics for the number of jobs published and purged.
 - Add ActiveSupport as a runtime dependency.
 
