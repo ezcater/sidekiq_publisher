@@ -75,8 +75,8 @@ RSpec.describe SidekiqPublisher::Publisher do
       it "records the count of jobs published in each batch" do
         publisher.publish
 
-        expect(metrics_reporter).to have_received(:try).with(:count, "sidekiq_publisher:published", 2)
-        expect(metrics_reporter).to have_received(:try).with(:count, "sidekiq_publisher:published", 1)
+        expect(metrics_reporter).to have_received(:try).with(:count, "sidekiq_publisher.published", 2)
+        expect(metrics_reporter).to have_received(:try).with(:count, "sidekiq_publisher.published", 1)
       end
     end
 

@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v0.2.1
+- Use period instead of colon as a separator in metric names.
+
 ## v0.2.0
 - Add caching for job class constant lookup.
 - Add metrics for the number of jobs published and purged.

@@ -71,7 +71,7 @@ RSpec.describe SidekiqPublisher::Job, type: :model do
 
       it "records a metric for the number of jobs purged" do
         described_class.purge_expired_published!
-        expect(metrics_reporter).to have_received(:try).with(:count, "sidekiq_publisher:purged", 1)
+        expect(metrics_reporter).to have_received(:try).with(:count, "sidekiq_publisher.purged", 1)
       end
     end
   end
