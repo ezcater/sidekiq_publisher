@@ -39,11 +39,10 @@ This gem uses the following configuration:
 * **logger**: the logger for this gem to use.
 * **exception_reporter**: a Proc that will be called with an exception
 * **metrics_reporter**: an optional object to record metrics. See below.
-* **batch_size**: the maximum number of jobs that will be enqueued to Sidekiq
-  together
+* **batch_size**: the maximum number of jobs that will be enqueued together to Sidekiq
 * **job_retention_period**: the duration that published jobs will be kept in
   Postgres after they have been enqueued to Sidekiq
-    
+
 ### Metrics Reporter
 
 The metrics reporter that can be configured with an object that is expected to
@@ -85,6 +84,15 @@ config.active_job.queue_adapter = :sidekiq_publisher
 Rails.application.config.active_job.queue_adapter = :sidekiq_publisher
 ```
 
+To selectively roll out the `SidekiqPublisher`, the adapter can be overridden for
+a specific job class:
+
+```ruby
+class MyJob < ApplicationJob
+  self.queue_adapter = :sidekiq_publisher
+end
+```
+
 ### SidekiqPublisher::Worker
 
 Sidekiq workers are usually defined by including `Sidekiq::Worker` in a class.
@@ -95,8 +103,8 @@ available on the class but jobs will be staged in the Postgres table.
 
 ### Running
 
-The publisher process that pulls the job data from postgres and puts them into redis
-can be run with a rake task that is added via railtie for Rails applications:
+The publisher process that pulls the job data from Postgres and puts them into Redis
+can be run with a rake task that is added via Railtie for Rails applications:
 
 ```bash
 bundle exec rake sidekiq_publisher:publish
@@ -108,7 +116,7 @@ After checking out the repo, run `bin/setup` to install dependencies. Then,
 run `rake spec` to run the tests. You can also run `bin/console` for an
 interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. 
+To install this gem onto your local machine, run `bundle exec rake install`.
 
 To release a new version, update the version number in `version.rb`, and then
 run `bundle exec rake release`, which will create a git tag for the version,
@@ -118,7 +126,9 @@ push git commits and tags, and push the `.gem` file to
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-https://github.com/ezcater/sidekiq_publisher.## License
+https://github.com/ezcater/sidekiq_publisher.
+
+## License
 
 The gem is available as open source under the terms of the
 [MIT License](http://opensource.org/licenses/MIT).
