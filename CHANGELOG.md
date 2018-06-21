@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v0.3.0
+- Add support for Rails 5.2.
+
 ## v0.2.1
 - Use period instead of colon as a separator in metric names.
 

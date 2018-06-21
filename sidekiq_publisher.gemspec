@@ -42,10 +42,11 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "activejob"
+  spec.add_development_dependency "appraisal"
   spec.add_development_dependency "bundler", "~> 1.12"
   spec.add_development_dependency "database_cleaner"
   spec.add_development_dependency "ezcater_matchers" # TODO: this is a private gem
-  spec.add_development_dependency "ezcater_rubocop", "0.52.7"
+  spec.add_development_dependency "ezcater_rubocop", "0.52.8"
   spec.add_development_dependency "factory_bot"
   spec.add_development_dependency "overcommit"
   spec.add_development_dependency "rake", "~> 10.0"
@@ -56,7 +57,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
 
   spec.add_runtime_dependency "activerecord-postgres_pub_sub"
-  spec.add_runtime_dependency "activesupport", "~> 5.1.4"
+  spec.add_runtime_dependency "activesupport", ">= 5.1", "< 5.3"
   spec.add_runtime_dependency "private_attr"
   spec.add_runtime_dependency "sidekiq", "~> 5.0.4"
 end
