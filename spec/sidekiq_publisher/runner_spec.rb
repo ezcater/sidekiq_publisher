@@ -69,7 +69,7 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
         wait_for("timeout") { counter[:published] > 1 }
 
         expect(SidekiqPublisher::Job).not_to have_received(:purge_expired_published!)
-        expect(publisher).to have_received(:publish).at_least(2).times
+        expect(publisher).to have_received(:publish).at_least(:twice)
       end
 
       it "logs a warning message" do

@@ -66,7 +66,7 @@ RSpec.describe SidekiqPublisher::Publisher do
       publisher.publish
 
       # two batches
-      expect(job_model).to have_received(:published!).exactly(2).times
+      expect(job_model).to have_received(:published!).twice
     end
 
     context "with a metrics reporter configured" do
