@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v0.3.1 (unreleased)
+- Index published_at as part of create table.
+
 ## v0.3.0
 - Add support for Rails 5.2.
 
