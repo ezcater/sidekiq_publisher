@@ -1,5 +1,7 @@
 # sidekiq_publisher
 
+[![CircleCI](https://circleci.com/gh/ezcater/sidekiq_publisher.svg?style=svg)](https://circleci.com/gh/ezcater/sidekiq_publisher)
+
 This gem provides support to enqueue jobs for Sidekiq by first staging the job
 in Postgres and relying on a separate process to communicate with Sidekiq/Redis.
 

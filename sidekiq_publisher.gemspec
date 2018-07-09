@@ -45,7 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "appraisal"
   spec.add_development_dependency "bundler", "~> 1.12"
   spec.add_development_dependency "database_cleaner"
-  spec.add_development_dependency "ezcater_matchers" # TODO: this is a private gem
+  spec.add_development_dependency "ezcater_matchers"
   spec.add_development_dependency "ezcater_rubocop", "0.57.0"
   spec.add_development_dependency "factory_bot"
   spec.add_development_dependency "overcommit"
