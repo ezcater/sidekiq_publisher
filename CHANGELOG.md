@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## v0.3.1 (unreleased)
+## v0.3.1
 - Index published_at as part of create table.
 
 ## v0.3.0
