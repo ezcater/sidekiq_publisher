@@ -10,11 +10,9 @@ class CreateSidekiqPublisherJobs < ActiveRecord::Migration[5.1]
       t.string :wrapped
       t.json :args, null: false
       t.float :run_at
-      t.timestamp :published_at
+      t.timestamp :published_at, index: true
       t.timestamp :created_at, null: false
     end
     # rubocop:enable Rails/CreateTableWithTimestamps
-
-    add_index(:sidekiq_publisher_jobs, :published_at)
   end
 end
