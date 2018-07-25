@@ -56,7 +56,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "shoulda-matchers"
   spec.add_development_dependency "simplecov"
 
-  spec.add_runtime_dependency "activerecord-postgres_pub_sub"
+  spec.add_runtime_dependency "activerecord-postgres_pub_sub", ">= 0.4.0"
   spec.add_runtime_dependency "activesupport", ">= 5.1", "< 5.3"
   spec.add_runtime_dependency "private_attr"
   spec.add_runtime_dependency "sidekiq", "~> 5.0.4"
