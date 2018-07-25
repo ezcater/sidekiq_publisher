@@ -1,5 +1,9 @@
 # sidekiq_publisher
 
+## v0.3.2
+- Require `activerecord-postgres_pub_sub` v0.4.0 or later for
+  strong migrations support.
+
 ## v0.3.1
 - Index published_at as part of create table.
 
