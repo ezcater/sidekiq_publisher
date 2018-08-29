@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v0.3.3
+- Do not report published count metric if it is nil.
+
 ## v0.3.2
 - Require `activerecord-postgres_pub_sub` v0.4.0 or later for
   strong migrations support.
