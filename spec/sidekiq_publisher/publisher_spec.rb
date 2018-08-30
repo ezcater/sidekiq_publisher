@@ -166,6 +166,16 @@ RSpec.describe SidekiqPublisher::Publisher do
 
           expect(job_model.unpublished.pluck(:id)).to match_array(unpublished_jobs.map(&:id))
         end
+
+        context "with a metrics reporter configured" do
+          include_context "metrics_reporter context"
+
+          it "does not record a count of jobs published" do
+            publisher.publish
+
+            expect(metrics_reporter).not_to have_received(:try)
+          end
+        end
       end
 
       context "when an error is raised while marking jobs as published" do
