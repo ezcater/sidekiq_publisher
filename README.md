@@ -103,6 +103,31 @@ To use the `SidekiqPublisher`, this can be replaced by including
 `SidekiqPublisher::Worker`. The usual `perform_async`, etc methods will be
 available on the class but jobs will be staged in the Postgres table.
 
+### Tying to a transaction
+To guarantee that your job is enqueued when there's a change to the
+system of record, simply publish it during the transaction
+representing that change. Usually, that can be accomplished by
+publishing in one of the ActiveRecord callbacks that are called
+within-transaction (e.g. `after_save`, but not `after_commit` and its
+derivatives):
+
+```ruby
+class Frob < ApplicationRecord
+  after_save do
+    MyJob.perform_later id
+  end
+end
+```
+
+For considering more complicated situations (e.g. jobs that should be
+guaranteed during specific changes across models), the rails guides on
+[querying](https://guides.rubyonrails.org/active_record_querying.html)
+and
+[callbacks](https://guides.rubyonrails.org/active_record_callbacks.html),
+and the documentation on
+[transactions](https://api.rubyonrails.org/classes/ActiveRecord/Transactions/ClassMethods.html)
+in ActiveRecord are good resources to consult.
+
 ### Running
 
 The publisher process that pulls the job data from Postgres and puts them into Redis
@@ -134,4 +159,3 @@ https://github.com/ezcater/sidekiq_publisher.
 
 The gem is available as open source under the terms of the
 [MIT License](http://opensource.org/licenses/MIT).
-
