@@ -86,6 +86,7 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
     loop do
       return if yield
       raise "Timed out waiting for #{notification}" if Time.now > timeout_at
+
       sleep(0.001)
     end
   end

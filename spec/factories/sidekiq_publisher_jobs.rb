@@ -6,7 +6,7 @@ FactoryBot.define do
           aliases: %i(publisher_job unpublished_job) do
 
     job_id { SidekiqPublisher::Job.generate_sidekiq_jid }
-    job_class { "TestJobClass" } # rubocop:disable FactoryBot/StaticAttributeDefinedDynamically
+    job_class { "TestJobClass" }
     sequence(:args) { |n| Hash[x: n] }
 
     factory :old_unpublished_job do
