@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v1.0.0
+- No change.
+
 ## v0.3.3
 - Do not report published count metric if it is nil.
 

@@ -6,11 +6,9 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
   let(:publisher) { instance_double(SidekiqPublisher::Publisher) }
   let(:runner_thread) do
     Thread.new do
-      begin
-        described_class.run
-      ensure
-        ActiveRecord::Base.clear_active_connections!
-      end
+      described_class.run
+    ensure
+      ActiveRecord::Base.clear_active_connections!
     end
   end
 
