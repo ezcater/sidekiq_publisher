@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v1.1.0
+- Expand sidekiq support to v5.0.x-v5.2.x.
+
 ## v1.0.0
 - No change.
 
