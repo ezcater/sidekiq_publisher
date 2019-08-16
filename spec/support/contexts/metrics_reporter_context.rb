@@ -6,5 +6,6 @@ shared_context "metrics_reporter context" do
   before do
     SidekiqPublisher.configure { |config| config.metrics_reporter = metrics_reporter }
     allow(metrics_reporter).to receive(:try)
+    allow(metrics_reporter).to receive(:gauge)
   end
 end

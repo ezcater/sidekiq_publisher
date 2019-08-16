@@ -1,5 +1,9 @@
 # sidekiq_publisher
 
+## v1.2.0
+- Add `ReportUnpublishedCount` to record a metric for the number
+  of unpublished jobs.
+
 ## v1.1.0
 - Expand sidekiq support to v5.0.x-v5.2.x.
 
