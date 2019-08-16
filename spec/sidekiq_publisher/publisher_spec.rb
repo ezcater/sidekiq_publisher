@@ -29,7 +29,7 @@ RSpec.describe SidekiqPublisher::Publisher do
             "class" => job.job_class.constantize,
             "args" => job.args,
             "jid" => job.job_id,
-            "created_at" => be_within(10**-6).of(job.created_at.to_f),
+            "created_at" => be_within(10**-3).of(job.created_at.to_f),
           }
         end
       end
