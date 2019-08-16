@@ -2,6 +2,7 @@
 
 require "private_attr"
 require "sidekiq_publisher/version"
+require "sidekiq_publisher/report_unpublished_count"
 require "sidekiq_publisher/job"
 require "sidekiq_publisher/worker"
 require "sidekiq_publisher/publisher"

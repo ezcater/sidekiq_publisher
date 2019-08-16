@@ -52,12 +52,25 @@ respond to the following API:
 
 ```ruby
 count(metric_name, count)
+gauge(metric_name, count)
 ```
 
 Metrics will be reported for:
 
 - the number of jobs published in each batch
 - the number of jobs purged
+
+#### Unpublished Jobs
+
+There is also a module that can be used to record a metric for the number of
+unpublished jobs:
+
+```ruby
+SidekiqPublisher::ReportUnpublishedCount.call
+```
+
+It is recommended to call this method periodically using something like
+cron or [clockwork](https://github.com/Rykian/clockwork).
 
 ## Usage
 
