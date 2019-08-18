@@ -70,3 +70,8 @@ jobs:
             ./cc-test-reporter before-build
             bundle exec appraisal rails-5.2-sidekiq-5.2 rspec --format RspecJunitFormatter --format progress
             ./cc-test-reporter after-build -t simplecov --exit-code $?
+
+      - run:
+          name: rails-6.0-sidekiq-5.2
+          command: |
+            bundle exec appraisal rails-6.0-sidekiq-5.2 rspec --format RspecJunitFormatter --format progress
