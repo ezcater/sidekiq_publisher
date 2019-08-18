@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v1.3.0
+- Extend support to Rails 6.0.
+
 ## v1.2.0
 - Add `ReportUnpublishedCount` to record a metric for the number
   of unpublished jobs.
