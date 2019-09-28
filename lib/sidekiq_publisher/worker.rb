@@ -4,6 +4,7 @@ module SidekiqPublisher
   module Worker
     def self.included(base)
       base.include(Sidekiq::Worker)
+      base.singleton_class.public_send(:alias_method, :sidekiq_client_push, :client_push)
       base.extend(ClassMethods)
     end
 
