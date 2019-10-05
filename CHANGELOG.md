@@ -1,7 +1,7 @@
 # sidekiq_publisher
 
 ## v1.4.0 (unreleased)
-- Preserve access to `Sidekiq::Worker`'s `#client_push` method.
+- Preserve access to `Sidekiq::Worker`'s `.client_push` method.
 
 ## v1.3.0
 - Extend support to Rails 6.0.
