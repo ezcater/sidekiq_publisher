@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## v1.4.0 (unreleased)
+## v1.4.0
 - Preserve access to `Sidekiq::Worker`'s `.client_push` method.
 
 ## v1.3.0
