@@ -13,6 +13,29 @@ RSpec.describe SidekiqPublisher::Worker do
     stub_const("TestWorker", worker_class)
   end
 
+  describe ".sidekiq_client_push" do
+    let(:redis) { Sidekiq.redis { |conn| conn } }
+
+    before do
+      Sidekiq.redis do |conn|
+        conn.scan_each do |key|
+          conn.del(key)
+        end
+      end
+    end
+
+    it "aliases Sidekiq::Worker's client_push method" do
+      TestWorker.sidekiq_client_push(
+        "class" => TestWorker,
+        "args" => args
+      )
+
+      expect(redis.llen("queue:default")).to eq(1)
+      expect(JSON.parse(redis.lindex("queue:default", 0))).
+        to include("class" => "TestWorker", "args" => args)
+    end
+  end
+
   describe ".perform_async" do
     it "creates a SidekiqPublisher job" do
       TestWorker.perform_async(*args)
