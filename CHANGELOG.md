@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v1.5.0
+- Expand sidekiq support to v5.0.x-v6.0.x.
+
 ## v1.4.0
 - Preserve access to `Sidekiq::Worker`'s `.client_push` method.
 
