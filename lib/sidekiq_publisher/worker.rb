@@ -10,12 +10,7 @@ module SidekiqPublisher
 
     module ClassMethods
       def client_push(item)
-        SidekiqPublisher::Job.create!(
-          job_class: item["class"].to_s,
-          args: item["args"],
-          run_at: item["at"],
-          queue: item["queue"]
-        )
+        SidekiqPublisher::Job.create_job!(item)
       end
     end
   end
