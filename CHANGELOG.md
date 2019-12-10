@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## v1.6.0 (unreleased)
+## v1.6.0
 - Support `Sidekiq::Testing` modes. This only applies to `SidekiqPublisher::Worker`
   and not the `ActiveJob` adapter.
 
