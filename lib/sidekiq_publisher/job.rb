@@ -18,6 +18,15 @@ module SidekiqPublisher
     scope :published, -> { where.not(published_at: nil) }
     scope :purgeable, -> { where("published_at < ?", Time.now.utc - job_retention_period) }
 
+    def self.create_job!(item)
+      create!(
+        job_class: item["class"].to_s,
+        args: item["args"],
+        run_at: item["at"],
+        queue: item["queue"]
+      )
+    end
+
     def self.generate_sidekiq_jid
       SecureRandom.hex(12)
     end

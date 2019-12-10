@@ -5,7 +5,7 @@ require "simplecov"
 SimpleCov.start
 
 require "active_job"
-require "sidekiq_publisher"
+require "sidekiq_publisher/testing"
 require "active_job/queue_adapters/sidekiq_publisher_adapter"
 
 require "database_cleaner"
@@ -18,6 +18,8 @@ Dir["#{__dir__}/support/**/*.rb"].sort.each { |f| require f }
 logger = Logger.new("log/test.log", level: :debug)
 ActiveRecord::Base.logger = logger
 SidekiqPublisher.logger = logger
+
+Sidekiq::Testing.disable!
 
 DATABASE_NAME = "sidekiq_publisher_test"
 

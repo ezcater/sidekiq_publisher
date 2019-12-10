@@ -43,6 +43,53 @@ RSpec.describe SidekiqPublisher::Worker do
       expect(job.job_class).to eq("TestWorker")
       expect(job.args).to eq(args)
     end
+
+    context "when Sidekiq::Testing mode is inline" do
+      let(:worker_class) do
+        Class.new do
+          include SidekiqPublisher::Worker
+
+          class << self
+            attr_accessor :count
+          end
+
+          self.count = 0
+
+          def perform(incr)
+            self.class.count += incr
+          end
+        end
+      end
+
+      around do |example|
+        Sidekiq::Testing.inline! do
+          example.run
+        end
+        Sidekiq::Testing.disable!
+      end
+
+      it "executes the job" do
+        incr = rand(999)
+        expect do
+          TestWorker.perform_async(incr)
+        end.to change(TestWorker, :count).by(incr)
+      end
+    end
+
+    context "when Sidekiq::Testing mode is fake" do
+      around do |example|
+        Sidekiq::Testing.fake! do
+          example.run
+        end
+        Sidekiq::Testing.disable!
+      end
+
+      it "adds the jobs to an array for the worker" do
+        expect do
+          TestWorker.perform_async(*args)
+        end.to change(TestWorker.jobs, :size).by(1)
+      end
+    end
   end
 
   context ".perform_in" do

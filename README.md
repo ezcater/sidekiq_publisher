@@ -150,6 +150,31 @@ can be run with a rake task that is added via Railtie for Rails applications:
 bundle exec rake sidekiq_publisher:publish
 ```
 
+## Testing
+
+### Sidekiq
+
+When using sidekiq_publisher directly with Sidekiq workers, the testing modes
+provided by Sidekiq are supported.
+
+Require the `sidekiq_publisher/testing` file. (This should only be done in test!)
+
+```ruby
+require "sidekiq_publisher/testing"
+```
+
+This file requires "sidekiq/testing" so there is no need to explictly require both.
+Note that by default, Sidekiq sets the test mode to `fake` and stores jobs in a
+`jobs` array for each worker class.
+
+To have `SidekiqPublisher` continue to insert jobs into a table within tests
+call `Sidekiq::Testing.disable!`.
+
+### ActiveJob
+
+When using the sidekiq_publisher adapter for `ActiveJob`, use the `ActiveJob`
+test adapter if you want to run jobs inline during tests.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then,
