@@ -58,6 +58,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "activerecord-postgres_pub_sub", ">= 0.4.0"
   spec.add_runtime_dependency "activesupport", ">= 5.1", "< 6.1"
-  spec.add_runtime_dependency "private_attr"
   spec.add_runtime_dependency "sidekiq", ">= 5.0.4", "< 6.1"
 end

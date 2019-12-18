@@ -4,12 +4,8 @@ require "activerecord-postgres_pub_sub"
 
 module SidekiqPublisher
   class Runner
-    extend PrivateAttr
-
     LISTENER_TIMEOUT_SECONDS = 60
     CHANNEL_NAME = "sidekiq_publisher_job"
-
-    private_attr_reader :publisher
 
     def self.run
       new.run
@@ -31,6 +27,8 @@ module SidekiqPublisher
     end
 
     private
+
+    attr_reader :publisher
 
     def listener_timeout
       if Job.unpublished.exists?

@@ -5,10 +5,6 @@ require "active_support/core_ext/object/try"
 
 module SidekiqPublisher
   class Publisher
-    extend PrivateAttr
-
-    private_attr_reader :client, :job_class_cache
-
     def initialize
       @client = SidekiqPublisher::Client.new
       @job_class_cache = {}
@@ -36,6 +32,8 @@ module SidekiqPublisher
     end
 
     private
+
+    attr_reader :client, :job_class_cache
 
     def publish_batch(batch, items)
       pushed_count = client.bulk_push(items)
