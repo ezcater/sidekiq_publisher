@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## v1.6.1 (unreleased)
+## v1.6.1
 - Remove the `private_attr` top-level gem dependency.
 
 ## v1.6.0
