@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## (Unreleased)
+- Gracefully respond to `INT` and `TERM` process signals.
+
 ## v1.6.1
 - Remove the `private_attr` top-level gem dependency.
 
