@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## (Unreleased)
+## v1.6.2
 - Gracefully respond to `INT` and `TERM` process signals.
 
 ## v1.6.1
