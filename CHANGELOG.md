@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v1.6.3
+- Handle client middleware that returns false.
+
 ## v1.6.2
 - Gracefully respond to `INT` and `TERM` process signals.
 

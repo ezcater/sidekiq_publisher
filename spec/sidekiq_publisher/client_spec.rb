@@ -85,5 +85,66 @@ RSpec.describe SidekiqPublisher::Client do
         expect(push!).to eq(2)
       end
     end
+
+    context "middleware job filtering" do
+      let(:push!) { client.bulk_push([{ "class" => TestJobClass, "args" => [1, 2, 3] }]) }
+      let(:filter_middleware) do
+        Class.new do
+          def initialize(result)
+            @result = result
+          end
+
+          def call(*_args)
+            @result
+          end
+        end
+      end
+
+      before do
+        stub_const("FilterMiddleware", filter_middleware)
+
+        Sidekiq.configure_client do |config|
+          config.client_middleware do |chain|
+            chain.add FilterMiddleware, filter_result
+          end
+        end
+      end
+
+      after do
+        Sidekiq.configure_client do |config|
+          config.client_middleware do |chain|
+            chain.remove FilterMiddleware
+          end
+        end
+      end
+
+      context "middleware returns nil" do
+        let(:filter_result) { nil }
+
+        it "does not enqueue a Sidekiq job" do
+          push!
+
+          expect(redis.llen("queue:default")).to eq(0)
+        end
+
+        it "returns the count of jobs enqueued" do
+          expect(push!).to eq(0)
+        end
+      end
+
+      context "middleware returns false" do
+        let(:filter_result) { false }
+
+        it "does not enqueue a Sidekiq job" do
+          push!
+
+          expect(redis.llen("queue:default")).to eq(0)
+        end
+
+        it "returns the count of jobs enqueued" do
+          expect(push!).to eq(0)
+        end
+      end
+    end
   end
 end
