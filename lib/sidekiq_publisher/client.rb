@@ -7,7 +7,7 @@ module SidekiqPublisher
     def bulk_push(items)
       payloads = items.map do |item|
         normed = normalize_item(item)
-        process_single(item["class"], normed)
+        process_single(item["class"], normed) || nil
       end.compact
 
       pushed = 0

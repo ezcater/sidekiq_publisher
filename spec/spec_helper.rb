@@ -22,9 +22,10 @@ SidekiqPublisher.logger = logger
 Sidekiq::Testing.disable!
 
 DATABASE_NAME = "sidekiq_publisher_test"
+REDIS_URL = ENV.fetch("REDIS_URL", "redis://localhost:6379")
 
 Sidekiq.configure_client do |config|
-  config.redis = { namespace: "sidekiq_publisher_test", url: "redis://localhost:6379" }
+  config.redis = { namespace: "sidekiq_publisher_test", url: REDIS_URL }
 end
 
 RSpec.configure do |config|
