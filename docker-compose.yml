@@ -1,0 +1,43 @@
+version: "3.4"
+volumes:
+  bundle-volume:
+  shared-volume:
+x-environment: &default-environment
+  PRYRC: /usr/src/app/.docker-pryrc
+  BUNDLE_IGNORE_CONFIG: 1
+  BUNDLE_DISABLE_SHARED_GEMS: "true"
+  PGUSER: postgres
+  PGHOST: sidekiq-publisher-postgres
+  PGPORT: 5432
+  PGDATABASE: sidekiq_publisher_test
+  REDIS_URL: redis://sidekiq-publisher-redis:6379
+x-service: &default-service
+  build:
+    context: .
+    args:
+      - BUNDLE_EZCATER__JFROG__IO
+  volumes:
+    - .:/usr/src/gem
+    - bundle-volume:/usr/local/bundle:delegated
+    - shared-volume:/usr/src/shared:delegated
+  tty: true
+  stdin_open: true
+services:
+  sidekiq-publisher-redis:
+    container_name: sidekiq-publisher-redis_1
+    image: redis:5.0.3-alpine
+  sidekiq-publisher-postgres:
+    container_name: sidekiq-publisher-postgres_1
+    image: postgres:10.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: sidekiq_publisher_test
+  sidekiq-publisher-console:
+    <<: *default-service
+    container_name: sidekiq-publisher-console_1
+    environment:
+      <<: *default-environment
+    command: bash
+    depends_on:
+      - sidekiq-publisher-redis
+      - sidekiq-publisher-postgres
