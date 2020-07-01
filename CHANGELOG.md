@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## (Unreleased)
+## v1.6.4
 - Expand sidekiq support to v5.0.x-v6.x.x.
 
 ## v1.6.3
