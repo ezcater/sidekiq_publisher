@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v1.7.0 (unreleased)
+- Add instrumentation using `ActiveSupport::Notifications`.
+
 ## v1.6.4
 - Expand sidekiq support to v5.0.x-v6.x.x.
 
