@@ -13,8 +13,8 @@ module SidekiqPublisher
     def instrument(event_name, payload = {}, &block)
       if backend
         backend.instrument("#{event_name}.#{NAMESPACE}", payload, &block)
-      else
-        yield(payload) if block
+      elsif block
+        yield(payload)
       end
     end
 
