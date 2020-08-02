@@ -4,7 +4,7 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
   let(:timeout) { 60 }
   let(:counter) { Hash.new(0) }
   let(:publisher) { instance_double(SidekiqPublisher::Publisher) }
-  let(:instrumenter) { instance_double(SidekiqPublisher::Instrumenter)}
+  let(:instrumenter) { instance_double(SidekiqPublisher::Instrumenter) }
   let(:runner_thread) do
     Thread.new do
       described_class.run(instrumenter)

@@ -149,7 +149,7 @@ RSpec.describe SidekiqPublisher::Publisher do
           publisher.publish
 
           expect(instrumenter).to have_received(:instrument).
-            with("error.publisher", { exception_object: error, exception: [error.class.name, error.message]})
+            with("error.publisher", exception_object: error, exception: [error.class.name, error.message])
         end
 
         it "does not update any jobs as published" do
@@ -186,7 +186,7 @@ RSpec.describe SidekiqPublisher::Publisher do
           publisher.publish
 
           expect(instrumenter).to have_received(:instrument).
-            with("error.publisher", { exception_object: error, exception: [error.class.name, error.message]})
+            with("error.publisher", exception_object: error, exception: [error.class.name, error.message])
         end
 
         it "does not update any jobs as published" do
@@ -242,7 +242,7 @@ RSpec.describe SidekiqPublisher::Publisher do
           publisher.publish
 
           expect(instrumenter).to have_received(:instrument).
-            with("error.publisher", { exception_object: error, exception: [error.class.name, error.message]})
+            with("error.publisher", exception_object: error, exception: [error.class.name, error.message])
         end
 
         it "updates the status of each published job" do

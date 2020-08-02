@@ -73,7 +73,7 @@ module SidekiqPublisher
       logger.warn("#{self.class.name}: msg=\"#{method} failed\" error=#{ex.class} error_msg=#{ex.message.inspect}\n")
       SidekiqPublisher.exception_reporter&.call(ex)
       instrumenter.instrument("error.publisher",
-                              { exception_object: ex, exception: [ex.class.name, ex.message] })
+                              exception_object: ex, exception: [ex.class.name, ex.message])
     end
 
     def logger
