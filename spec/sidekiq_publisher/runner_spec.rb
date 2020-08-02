@@ -4,9 +4,10 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
   let(:timeout) { 60 }
   let(:counter) { Hash.new(0) }
   let(:publisher) { instance_double(SidekiqPublisher::Publisher) }
+  let(:instrumenter) { instance_double(SidekiqPublisher::Instrumenter)}
   let(:runner_thread) do
     Thread.new do
-      described_class.run
+      described_class.run(instrumenter)
     ensure
       ActiveRecord::Base.clear_active_connections!
     end
@@ -14,6 +15,7 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
 
   before do
     allow(publisher).to receive(:publish) { counter[:published] += 1 }
+    allow(instrumenter).to receive(:instrument).and_yield
     allow(SidekiqPublisher::Publisher).to receive(:new).and_return(publisher)
     stub_const("#{described_class}::LISTENER_TIMEOUT_SECONDS", timeout)
     runner_thread
@@ -28,6 +30,7 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
     wait_for("start") { counter[:published] > 0 }
 
     expect(publisher).to have_received(:publish)
+    expect(instrumenter).to have_received(:instrument).with("start.publisher")
   end
 
   it "publishes when the listener is notified" do
@@ -36,6 +39,7 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
     wait_for("notify") { counter[:published] > 1 }
 
     expect(publisher).to have_received(:publish).twice
+    expect(instrumenter).to have_received(:instrument).with("notify.publisher")
   end
 
   context "when the notification times out" do
@@ -52,6 +56,7 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
       wait_for("purge") { counter[:purged] > 0 }
 
       expect(SidekiqPublisher::Job).to have_received(:purge_expired_published!)
+      expect(instrumenter).to have_received(:instrument).with("timeout.listener")
     end
 
     context "when there are unpublished jobs" do
@@ -68,6 +73,7 @@ RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
 
         expect(SidekiqPublisher::Job).not_to have_received(:purge_expired_published!)
         expect(publisher).to have_received(:publish).at_least(:twice)
+        expect(instrumenter).to have_received(:instrument).with("timeout.publisher")
       end
 
       it "logs a warning message" do

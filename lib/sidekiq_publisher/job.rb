@@ -39,9 +39,11 @@ module SidekiqPublisher
       where(id: ids).update_all(published_at: Time.now.utc)
     end
 
-    def self.purge_expired_published!
+    def self.purge_expired_published!(instrumenter: Instrumenter.new)
       SidekiqPublisher.logger.info("#{name} purging expired published jobs.")
-      count = purgeable.delete_all
+      count = instrumenter.instrument("purge.job") do |notification|
+        notification[:purged_count] = purgeable.delete_all
+      end
       SidekiqPublisher.logger.info("#{name} purged #{count} expired published jobs.")
       SidekiqPublisher.metrics_reporter.try(:count, "sidekiq_publisher.purged", count)
     end
