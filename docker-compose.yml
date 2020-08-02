@@ -25,10 +25,10 @@ x-service: &default-service
 services:
   sidekiq-publisher-redis:
     container_name: sidekiq-publisher-redis_1
-    image: redis:5.0.3-alpine
+    image: redis:5.0.9-alpine
   sidekiq-publisher-postgres:
     container_name: sidekiq-publisher-postgres_1
-    image: postgres:10.6
+    image: postgres:11.6
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: sidekiq_publisher_test
