@@ -8,11 +8,11 @@ jobs:
         environment:
           - PGHOST: 127.0.0.1
           - PGUSER: postgres
-      - image: circleci/postgres:9.6.8
+      - image: circleci/postgres:11.6
         environment:
           - POSTGRES_USER: postgres
           - POSTGRES_DB: sidekiq_publisher_test
-      - image: redis:2.8
+      - image: redis:5.0
     steps:
       - checkout
 
