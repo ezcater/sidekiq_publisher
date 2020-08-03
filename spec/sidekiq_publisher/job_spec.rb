@@ -79,7 +79,7 @@ RSpec.describe SidekiqPublisher::Job, type: :model do
       expect(payload[:purged_count]).to eq(1)
     end
 
-    context "with a metrics_reporter configured" do
+    context "with a metrics_reporter configured", :integration do
       include_context "metrics_reporter context"
 
       it "records a metric for the number of jobs purged" do

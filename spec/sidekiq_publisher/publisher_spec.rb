@@ -83,8 +83,14 @@ RSpec.describe SidekiqPublisher::Publisher do
       expect(payload[:published_count]).to eq(1)
     end
 
-    context "with a metrics reporter configured" do
+    context "with a metrics reporter configured", :integration do
       include_context "metrics_reporter context"
+      let(:instrumenter) { SidekiqPublisher::Instrumenter.new }
+
+      before do
+        # unstub
+        allow(instrumenter).to receive(:instrument).and_call_original
+      end
 
       it "records the count of jobs published in each batch" do
         publisher.publish
@@ -112,14 +118,27 @@ RSpec.describe SidekiqPublisher::Publisher do
 
     context "error handling" do
       let(:batch_size) { 3 }
-      let(:exception_reporter) do
-        instance_double(Proc).tap { |reporter| allow(reporter).to receive(:call) }
-      end
       let(:logger) { SidekiqPublisher.logger }
 
       before do
         allow(SidekiqPublisher.logger).to receive(:warn)
-        SidekiqPublisher.exception_reporter = exception_reporter
+      end
+
+      shared_examples_for "an exception reporter is configured", :integration do
+        let(:exception_reporter) { instance_double(Proc) }
+        let(:instrumenter) { SidekiqPublisher::Instrumenter.new }
+
+        before do
+          allow(exception_reporter).to receive(:call)
+          SidekiqPublisher.exception_reporter = exception_reporter
+          allow(instrumenter).to receive(:instrument).with("error.publisher", instance_of(Hash)).and_call_original
+        end
+
+        it "reports the error to the exception reporter" do
+          publisher.publish
+
+          expect(exception_reporter).to have_received(:call).with(error)
+        end
       end
 
       context "when an error is raised prior to publishing" do
@@ -139,18 +158,14 @@ RSpec.describe SidekiqPublisher::Publisher do
           expect(logger).to have_received(:warn)
         end
 
-        it "reports the exception to the exception reporter" do
-          publisher.publish
-
-          expect(exception_reporter).to have_received(:call).with(error)
-        end
-
         it "instruments the error" do
           publisher.publish
 
           expect(instrumenter).to have_received(:instrument).
             with("error.publisher", exception_object: error, exception: [error.class.name, error.message])
         end
+
+        it_behaves_like "an exception reporter is configured"
 
         it "does not update any jobs as published" do
           publisher.publish
@@ -176,18 +191,14 @@ RSpec.describe SidekiqPublisher::Publisher do
           expect(logger).to have_received(:warn)
         end
 
-        it "reports the exception to the exception reporter" do
-          publisher.publish
-
-          expect(exception_reporter).to have_received(:call).with(error)
-        end
-
         it "instruments the error" do
           publisher.publish
 
           expect(instrumenter).to have_received(:instrument).
             with("error.publisher", exception_object: error, exception: [error.class.name, error.message])
         end
+
+        it_behaves_like "an exception reporter is configured"
 
         it "does not update any jobs as published" do
           publisher.publish
@@ -232,18 +243,14 @@ RSpec.describe SidekiqPublisher::Publisher do
           expect(logger).to have_received(:warn)
         end
 
-        it "reports the exception to the exception reporter" do
-          publisher.publish
-
-          expect(exception_reporter).to have_received(:call).with(error)
-        end
-
         it "instruments the error" do
           publisher.publish
 
           expect(instrumenter).to have_received(:instrument).
             with("error.publisher", exception_object: error, exception: [error.class.name, error.message])
         end
+
+        it_behaves_like "an exception reporter is configured"
 
         it "updates the status of each published job" do
           publisher.publish

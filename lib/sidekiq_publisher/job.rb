@@ -45,7 +45,6 @@ module SidekiqPublisher
         notification[:purged_count] = purgeable.delete_all
       end
       SidekiqPublisher.logger.info("#{name} purged #{count} expired published jobs.")
-      SidekiqPublisher.metrics_reporter.try(:count, "sidekiq_publisher.purged", count)
     end
 
     def self.unpublished_batches(batch_size: SidekiqPublisher.batch_size)

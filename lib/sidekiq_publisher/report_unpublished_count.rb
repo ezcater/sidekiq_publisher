@@ -2,10 +2,9 @@
 
 module SidekiqPublisher
   module ReportUnpublishedCount
-    def self.call
-      SidekiqPublisher.metrics_reporter.
-        gauge("sidekiq_publisher.unpublished_count",
-              SidekiqPublisher::Job.unpublished.count)
+    def self.call(instrumenter: Instrumenter.new)
+      instrumenter.instrument("unpublished.reporter",
+                              unpublished_count: SidekiqPublisher::Job.unpublished.count)
     end
   end
 end
