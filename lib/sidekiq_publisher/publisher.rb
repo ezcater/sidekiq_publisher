@@ -48,7 +48,6 @@ module SidekiqPublisher
     ensure
       published_count = update_jobs_as_published!(batch) if pushed_count.present? && published_count.nil?
       notification[:published_count] = published_count if published_count.present?
-      metrics_reporter.try(:count, "sidekiq_publisher.published", published_count) if published_count.present?
     end
 
     def lookup_job_class(name)
@@ -71,17 +70,12 @@ module SidekiqPublisher
 
     def failure_warning(method, ex)
       logger.warn("#{self.class.name}: msg=\"#{method} failed\" error=#{ex.class} error_msg=#{ex.message.inspect}\n")
-      SidekiqPublisher.exception_reporter&.call(ex)
       instrumenter.instrument("error.publisher",
                               exception_object: ex, exception: [ex.class.name, ex.message])
     end
 
     def logger
       SidekiqPublisher.logger
-    end
-
-    def metrics_reporter
-      SidekiqPublisher.metrics_reporter
     end
   end
 end

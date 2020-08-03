@@ -1,25 +1,13 @@
 # frozen_string_literal: true
 
+require "active_support/notifications"
+
 module SidekiqPublisher
   class Instrumenter
     NAMESPACE = "sidekiq_publisher"
 
-    def initialize
-      @backend = if defined?(ActiveSupport::Notifications)
-                   ActiveSupport::Notifications
-                 end
-    end
-
     def instrument(event_name, payload = {}, &block)
-      if backend
-        backend.instrument("#{event_name}.#{NAMESPACE}", payload, &block)
-      elsif block
-        yield(payload)
-      end
+      ActiveSupport::Notifications.instrument("#{event_name}.#{NAMESPACE}", payload, &block)
     end
-
-    private
-
-    attr_reader :backend
   end
 end
