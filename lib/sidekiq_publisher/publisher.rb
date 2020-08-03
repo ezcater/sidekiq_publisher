@@ -5,26 +5,31 @@ require "active_support/core_ext/object/try"
 
 module SidekiqPublisher
   class Publisher
-    def initialize
+    def initialize(instrumenter: Instrumenter.new)
+      @instrumenter = instrumenter
       @client = SidekiqPublisher::Client.new
       @job_class_cache = {}
     end
 
     def publish
       Job.unpublished_batches do |batch|
-        items = batch.map do |job|
-          {
-            "jid" => job[:job_id],
-            "class" => lookup_job_class(job[:job_class]),
-            "args" => job[:args],
-            "at" => job[:run_at],
-            "queue" => job[:queue],
-            "wrapped" => job[:wrapped],
-            "created_at" => job[:created_at].to_f,
-          }.tap(&:compact!)
-        end
+        instrumenter.instrument("publish_batch.publisher") do
+          items = batch.map do |job|
+            {
+              "jid" => job[:job_id],
+              "class" => lookup_job_class(job[:job_class]),
+              "args" => job[:args],
+              "at" => job[:run_at],
+              "queue" => job[:queue],
+              "wrapped" => job[:wrapped],
+              "created_at" => job[:created_at].to_f,
+            }.tap(&:compact!)
+          end
 
-        publish_batch(batch, items)
+          instrumenter.instrument("enqueue_batch.publisher") do |notification|
+            enqueue_batch(batch, items, notification)
+          end
+        end
       end
       purge_expired_published_jobs
     rescue StandardError => ex
@@ -33,15 +38,16 @@ module SidekiqPublisher
 
     private
 
-    attr_reader :client, :job_class_cache
+    attr_reader :client, :job_class_cache, :instrumenter
 
-    def publish_batch(batch, items)
+    def enqueue_batch(batch, items, notification)
       pushed_count = client.bulk_push(items)
       published_count = update_jobs_as_published!(batch)
     rescue StandardError => ex
       failure_warning(__method__, ex)
     ensure
       published_count = update_jobs_as_published!(batch) if pushed_count.present? && published_count.nil?
+      notification[:published_count] = published_count if published_count.present?
       metrics_reporter.try(:count, "sidekiq_publisher.published", published_count) if published_count.present?
     end
 
@@ -56,7 +62,7 @@ module SidekiqPublisher
     end
 
     def purge_expired_published_jobs
-      Job.purge_expired_published! if perform_purge?
+      Job.purge_expired_published!(instrumenter: instrumenter) if perform_purge?
     end
 
     def perform_purge?
@@ -64,9 +70,10 @@ module SidekiqPublisher
     end
 
     def failure_warning(method, ex)
-      logger.warn("#{self.class.name}: msg=\"#{method} failed\" error=#{ex.class} error_msg=#{ex.message.inspect}\n"\
-                  "#{ex.backtrace.join("\n")}")
+      logger.warn("#{self.class.name}: msg=\"#{method} failed\" error=#{ex.class} error_msg=#{ex.message.inspect}\n")
       SidekiqPublisher.exception_reporter&.call(ex)
+      instrumenter.instrument("error.publisher",
+                              exception_object: ex, exception: [ex.class.name, ex.message])
     end
 
     def logger

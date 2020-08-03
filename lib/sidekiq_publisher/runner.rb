@@ -7,12 +7,13 @@ module SidekiqPublisher
     LISTENER_TIMEOUT_SECONDS = 60
     CHANNEL_NAME = "sidekiq_publisher_job"
 
-    def self.run
-      new.run
+    def self.run(instrumenter = Instrumenter.new)
+      new(instrumenter).run
     end
 
-    def initialize
-      @publisher = Publisher.new
+    def initialize(instrumenter = Instrumenter.new)
+      @instrumenter = instrumenter
+      @publisher = Publisher.new(instrumenter: @instrumenter)
     end
 
     def run
@@ -20,24 +21,32 @@ module SidekiqPublisher
         CHANNEL_NAME,
         listen_timeout: LISTENER_TIMEOUT_SECONDS
       ) do |listener|
-        listener.on_start { publisher.publish }
-        listener.on_notify { publisher.publish }
+        listener.on_start { call_publish("start") }
+        listener.on_notify { call_publish("notify") }
         listener.on_timeout { listener_timeout }
       end
     end
 
     private
 
-    attr_reader :publisher
+    attr_reader :publisher, :instrumenter
+
+    def call_publish(event)
+      instrumenter.instrument("#{event}.publisher") do
+        publisher.publish
+      end
+    end
 
     def listener_timeout
-      if Job.unpublished.exists?
-        SidekiqPublisher.logger&.warn(
-          "#{self.class.name}: msg='publishing pending jobs at timeout'"
-        )
-        publisher.publish
-      else
-        Job.purge_expired_published!
+      instrumenter.instrument("timeout.listener") do
+        if Job.unpublished.exists?
+          SidekiqPublisher.logger&.warn(
+            "#{self.class.name}: msg='publishing pending jobs at timeout'"
+          )
+          call_publish("timeout")
+        else
+          Job.purge_expired_published!(instrumenter: instrumenter)
+        end
       end
     end
   end

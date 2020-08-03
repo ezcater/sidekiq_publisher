@@ -55,6 +55,12 @@ RSpec.describe SidekiqPublisher::Job, type: :model do
     let!(:published_job) { create(:published_job) }
     let!(:purgeable_job) { create(:purgeable_job) }
     let!(:old_unpublished_job) { create(:old_unpublished_job) }
+    let(:instrumenter) { instance_double(SidekiqPublisher::Instrumenter) }
+    let(:payload) { Hash.new }
+
+    before do
+      allow(instrumenter).to receive(:instrument).and_yield(payload)
+    end
 
     it "only deletes purgeable jobs" do
       described_class.purge_expired_published!
@@ -64,6 +70,13 @@ RSpec.describe SidekiqPublisher::Job, type: :model do
       expect(described_class.find_by(id: unpublished_job.id)).to be_present
       expect(described_class.find_by(id: old_unpublished_job.id)).to be_present
       expect(described_class.find_by(id: published_job.id)).to be_present
+    end
+
+    it "instruments the job purge" do
+      described_class.purge_expired_published!(instrumenter: instrumenter)
+
+      expect(instrumenter).to have_received(:instrument).with("purge.job")
+      expect(payload[:purged_count]).to eq(1)
     end
 
     context "with a metrics_reporter configured" do

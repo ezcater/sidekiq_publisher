@@ -2,10 +2,12 @@
 
 RSpec.describe SidekiqPublisher::Publisher do
   let(:client) { instance_double(SidekiqPublisher::Client) }
-  let(:publisher) { described_class.new }
+  let(:publisher) { described_class.new(instrumenter: instrumenter) }
   let(:test_job_class) { Class.new { include SidekiqPublisher::Worker } }
   let(:buffer) { Array.new }
   let(:job_model) { SidekiqPublisher::Job }
+  let(:instrumenter) { instance_double(SidekiqPublisher::Instrumenter) }
+  let(:payload) { Hash.new }
 
   before do
     stub_const("TestJobClass", test_job_class)
@@ -14,6 +16,10 @@ RSpec.describe SidekiqPublisher::Publisher do
     allow(client).to receive(:bulk_push) do |items|
       buffer << items
     end
+    allow(instrumenter).to receive(:instrument).and_yield(Hash.new)
+    allow(instrumenter).to receive(:instrument).with("error.publisher", instance_of(Hash)) # no yield
+    allow(instrumenter).to receive(:instrument).with("publish_batch.publisher").and_yield
+    allow(instrumenter).to receive(:instrument).with("enqueue_batch.publisher").and_yield(payload)
   end
 
   describe "#publish" do
@@ -67,6 +73,14 @@ RSpec.describe SidekiqPublisher::Publisher do
 
       # two batches
       expect(job_model).to have_received(:published!).twice
+    end
+
+    it "instruments publish activity" do
+      publisher.publish
+
+      expect(instrumenter).to have_received(:instrument).with("publish_batch.publisher").twice
+      expect(instrumenter).to have_received(:instrument).with("enqueue_batch.publisher").twice
+      expect(payload[:published_count]).to eq(1)
     end
 
     context "with a metrics reporter configured" do
@@ -131,6 +145,13 @@ RSpec.describe SidekiqPublisher::Publisher do
           expect(exception_reporter).to have_received(:call).with(error)
         end
 
+        it "instruments the error" do
+          publisher.publish
+
+          expect(instrumenter).to have_received(:instrument).
+            with("error.publisher", exception_object: error, exception: [error.class.name, error.message])
+        end
+
         it "does not update any jobs as published" do
           publisher.publish
 
@@ -159,6 +180,13 @@ RSpec.describe SidekiqPublisher::Publisher do
           publisher.publish
 
           expect(exception_reporter).to have_received(:call).with(error)
+        end
+
+        it "instruments the error" do
+          publisher.publish
+
+          expect(instrumenter).to have_received(:instrument).
+            with("error.publisher", exception_object: error, exception: [error.class.name, error.message])
         end
 
         it "does not update any jobs as published" do
@@ -208,6 +236,13 @@ RSpec.describe SidekiqPublisher::Publisher do
           publisher.publish
 
           expect(exception_reporter).to have_received(:call).with(error)
+        end
+
+        it "instruments the error" do
+          publisher.publish
+
+          expect(instrumenter).to have_received(:instrument).
+            with("error.publisher", exception_object: error, exception: [error.class.name, error.message])
         end
 
         it "updates the status of each published job" do
