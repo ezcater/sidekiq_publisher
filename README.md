@@ -72,6 +72,34 @@ SidekiqPublisher::ReportUnpublishedCount.call
 It is recommended to call this method periodically using something like
 cron or [clockwork](https://github.com/Rykian/clockwork).
 
+## Instrumentation
+
+Instrumentation of this library is implemented using
+[ActiveSupport::Notifications](https://api.rubyonrails.org/classes/ActiveSupport/Notifications.html).
+
+The support for the configurable [metrics_reporter](lib/sidekiq_publisher/metrics_reporter.rb) and
+[exception_reporter](lib/sidekiq_publisher/exception_reporter.rb) options is implemented using
+[ActiveSupport::Subscriber](https://api.rubyonrails.org/classes/ActiveSupport/Subscriber.html).
+
+If an alternate integration is required for metrics or error reporting then it can be implemented using outside this
+library based on these examples.
+
+### Tracing
+
+The instrumentation in the library also supports integration with application tracing products, such as
+[Datadog APM](https://www.datadoghq.com/product/apm/).
+
+There is an optional integration with Datadog APM that can be required:
+
+```ruby
+require "sidekiq_publisher/datadog_apm"
+```
+
+This file must be required in addition including the `sidekiq_publisher` gem or requiring `sidekiq_publisher`.
+
+This integration covers all of the sections of the library that are instrumented and serves an
+[example](lib/sidekiq_publisher/datadog_apm) for implementing trace reporting for other products outside this library.
+
 ## Usage
 
 ### ActiveJob Adapter

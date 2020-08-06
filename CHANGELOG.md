@@ -2,6 +2,9 @@
 
 ## v1.7.0 (unreleased)
 - Add instrumentation using `ActiveSupport::Notifications`.
+- Reimplement `metrics_reporter` and `exception_reporter` support using
+  `ActiveSupport::Subscriber`.
+- Add optional integration with Datadog APM.
 
 ## v1.6.4
 - Expand sidekiq support to v5.0.x-v6.x.x.
