@@ -5,6 +5,7 @@ require "simplecov"
 SimpleCov.start
 
 require "active_support/notifications"
+require "sidekiq_publisher/datadog_apm"
 
 require "active_job"
 require "sidekiq_publisher/testing"
@@ -28,6 +29,11 @@ REDIS_URL = ENV.fetch("REDIS_URL", "redis://localhost:6379")
 
 Sidekiq.configure_client do |config|
   config.redis = { namespace: "sidekiq_publisher_test", url: REDIS_URL }
+end
+
+Datadog.configure do |c|
+  c.tracer = Datadog::TestTracer.new
+  c.env = "test"
 end
 
 RSpec.configure do |config|
@@ -87,6 +93,8 @@ RSpec.configure do |config|
   config.after do |example|
     DatabaseCleaner.clean unless example.metadata.fetch(:skip_db_clean, false)
   end
+
+  config.after { Datadog.tracer.reset! }
 end
 
 Shoulda::Matchers.configure do |config|
