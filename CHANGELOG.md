@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## v1.7.0 (unreleased)
+## v1.7.0
 - Add instrumentation using `ActiveSupport::Notifications`.
 - Reimplement `metrics_reporter` and `exception_reporter` support using
   `ActiveSupport::Subscriber`.
