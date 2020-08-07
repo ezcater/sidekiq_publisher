@@ -5,6 +5,8 @@ require "ddtrace"
 
 module SidekiqPublisher
   module DatadogAPM
+    OPERATION = "sidekiq_publisher"
+
     class << self
       attr_writer :service
 
@@ -24,11 +26,13 @@ module SidekiqPublisher
 
       private
 
-      def start_span(operation, payload)
-        # Internal sanity check
-        raise "Fix operation name: #{operation}" if operation.end_with?("sidekiq_publisher")
+      def start_span(operation, payload, resource = nil)
+        resource ||= operation
+        payload[:datadog_span] = Datadog.tracer.trace(operation, service: service, resource: resource)
+      end
 
-        payload[:datadog_span] = Datadog.tracer.trace(operation, service: service)
+      def start_primary_span(resource, payload)
+        start_span(OPERATION, payload, resource)
       end
 
       def finish_span(payload)
@@ -43,7 +47,7 @@ module SidekiqPublisher
 
     class ListenerSubscriber < Subscriber
       def start(_name, _id, payload)
-        start_span("listener.timeout", payload)
+        start_primary_span("listener.timeout", payload)
       end
 
       subscribe_to "timeout.listener.sidekiq_publisher"
@@ -52,7 +56,7 @@ module SidekiqPublisher
     class RunnerSubscriber < Subscriber
       def start(name, _id, payload)
         op_name = name.split(".").first
-        start_span("publisher.#{op_name}", payload)
+        start_primary_span("publisher.#{op_name}", payload)
       end
 
       subscribe_to "start.publisher.sidekiq_publisher"

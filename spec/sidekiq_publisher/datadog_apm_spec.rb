@@ -43,32 +43,36 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
   end
 
   describe "ListenerSubscriber" do
-    it "creates a span for a listener.timeout operation" do
+    it "creates a span for a listener.timeout resource" do
       instrumenter.instrument("timeout.listener") {}
       expect(span.service).to eq(service)
-      expect(span.name).to eq("listener.timeout")
+      expect(span.name).to eq("sidekiq_publisher")
+      expect(span.resource).to eq("listener.timeout")
     end
 
     it_behaves_like "trace error handling", "timeout.listener"
   end
 
   describe "RunnerSubscriber" do
-    it "creates a span for a publisher.start operation" do
+    it "creates a span for a publisher.start resource" do
       instrumenter.instrument("start.publisher") {}
       expect(span.service).to eq(service)
-      expect(span.name).to eq("publisher.start")
+      expect(span.name).to eq("sidekiq_publisher")
+      expect(span.resource).to eq("publisher.start")
     end
 
-    it "creates a span for a publisher.notify operation" do
+    it "creates a span for a publisher.notify resource" do
       instrumenter.instrument("notify.publisher") {}
       expect(span.service).to eq(service)
-      expect(span.name).to eq("publisher.notify")
+      expect(span.name).to eq("sidekiq_publisher")
+      expect(span.resource).to eq("publisher.notify")
     end
 
-    it "creates a span for a publisher.timeout operation" do
+    it "creates a span for a publisher.timeout resource" do
       instrumenter.instrument("timeout.publisher") {}
       expect(span.service).to eq(service)
-      expect(span.name).to eq("publisher.timeout")
+      expect(span.name).to eq("sidekiq_publisher")
+      expect(span.resource).to eq("publisher.timeout")
     end
 
     it_behaves_like "trace error handling", "start.publisher"
