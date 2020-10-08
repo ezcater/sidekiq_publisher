@@ -32,5 +32,17 @@ RSpec.describe SidekiqPublisher::ReportUnpublishedCount do
       expect(instrumenter).to have_received(:instrument).
         with("unpublished.reporter", unpublished_count: job_count)
     end
+
+    context "and a PG::ConnectionBad/PG::UnableToSend error is encountered" do
+      before do
+        allow(SidekiqPublisher::Job).to receive(:unpublished).and_raise(PG::ConnectionBad)
+        allow(ActiveRecord::Base).to receive(:clear_active_connections!)
+      end
+
+      it "re-raises the DB error and attempts to reconnect the connections" do
+        expect { described_class.call(instrumenter: instrumenter) }.to raise_error(PG::ConnectionBad)
+        expect(ActiveRecord::Base).to have_received(:clear_active_connections!)
+      end
+    end
   end
 end
