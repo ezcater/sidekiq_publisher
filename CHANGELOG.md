@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v1.7.1 (unreleased)
+- Gracefully handle database connection errors by attempting to reconnect
+
 ## v1.7.0
 - Add instrumentation using `ActiveSupport::Notifications`.
 - Reimplement `metrics_reporter` and `exception_reporter` support using
