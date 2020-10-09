@@ -1,7 +1,7 @@
 # sidekiq_publisher
 
-## v1.7.1 (unreleased)
-- Gracefully handle database connection errors by attempting to reconnect
+## v1.7.1
+- Gracefully handle database connection errors in ReportUnpublishedCount by attempting to reconnect.
 
 ## v1.7.0
 - Add instrumentation using `ActiveSupport::Notifications`.
