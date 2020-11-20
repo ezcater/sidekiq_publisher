@@ -136,6 +136,21 @@ class MyJob < ApplicationJob
 end
 ```
 
+#### ActiveJob Exception Reporting
+
+Many exception monitoring service (e.g. Sentry, Airbrake, Honeybadger, etc) already provide basic integration support for `Sidekiq`. 
+These integration should also work with `SidekiqPublisher`. 
+However, you may need to explicitly include 
+`ActiveJob::QueueAdapters::SidekiqPublisherAdapter` as a compatible adapter for this to work properly.
+
+Alternatively, you can manually report the exception:
+
+ ```ruby
+retry_on SomeError, attempts: 10 do |_job, exception|
+  Raven.capture_exception(exception, extra: { custom: :foo }) # Reporting using the Sentry gem 
+end
+```
+
 ### SidekiqPublisher::Worker
 
 Sidekiq workers are usually defined by including `Sidekiq::Worker` in a class.
