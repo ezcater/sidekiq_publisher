@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+$LOAD_PATH.unshift File.expand_path("../app/models", __dir__)
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "simplecov"
 SimpleCov.start
+
+require "active_record"
+require "sidekiq_publisher/job"
 
 require "active_support/notifications"
 require "sidekiq_publisher/datadog_apm"

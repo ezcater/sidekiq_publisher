@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## Unreleased
+- Transition from defining a Railtie to becoming a Rails Engine.
+
 ## v1.8.0
 - Extend support to Rails 6.1.
 

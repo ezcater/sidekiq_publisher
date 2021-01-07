@@ -7,11 +7,10 @@ require "sidekiq_publisher/instrumenter"
 require "sidekiq_publisher/metrics_reporter"
 require "sidekiq_publisher/exception_reporter"
 require "sidekiq_publisher/report_unpublished_count"
-require "sidekiq_publisher/job"
 require "sidekiq_publisher/worker"
 require "sidekiq_publisher/publisher"
 require "sidekiq_publisher/runner"
-require "sidekiq_publisher/railtie" if defined?(Rails)
+require "sidekiq_publisher/engine" if defined?(Rails)
 
 module SidekiqPublisher
   DEFAULT_BATCH_SIZE = 100
