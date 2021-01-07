@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "sidekiq_publisher/client"
-require "active_support/core_ext/object/try"
+require "active_support/core_ext/object/blank"
 
 module SidekiqPublisher
   class Publisher
