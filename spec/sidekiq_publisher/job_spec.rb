@@ -15,12 +15,12 @@ RSpec.describe SidekiqPublisher::Job, type: :model do
 
   describe ".create!" do
     it "sets a job_id if unset" do
-      job = described_class.create!(job_class: "Foo", args: [])
+      job = described_class.create!(job_class: "Foo", args: {})
       expect(job.job_id).to match(/^[0-9a-f]{24}$/)
     end
 
     it "ensures that job_class is a string" do
-      job = described_class.create!(job_class: TestJob, args: [])
+      job = described_class.create!(job_class: TestJob, args: {})
       expect(job.job_class).to eq("TestJob")
     end
   end

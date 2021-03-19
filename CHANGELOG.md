@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## v1.8.0 (unreleased)
+- Extend support to Rails 6.1.
+
 ## v1.7.1
 - Gracefully handle database connection errors in ReportUnpublishedCount by attempting to reconnect.
 
