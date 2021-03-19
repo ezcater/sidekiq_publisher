@@ -58,6 +58,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov", "< 0.18"
 
   spec.add_runtime_dependency "activerecord-postgres_pub_sub", ">= 0.4.0"
-  spec.add_runtime_dependency "activesupport", ">= 5.1", "< 6.1"
+  spec.add_runtime_dependency "activesupport", ">= 5.1", "< 6.2"
   spec.add_runtime_dependency "sidekiq", ">= 5.0.4", "< 7.0"
 end
