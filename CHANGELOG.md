@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## v1.8.0 (unreleased)
+## v1.8.0
 - Extend support to Rails 6.1.
 
 ## v1.7.1
