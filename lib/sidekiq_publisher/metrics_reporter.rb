@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/subscriber"
+require "active_support/core_ext/object/try"
 
 module SidekiqPublisher
   module MetricsReporter

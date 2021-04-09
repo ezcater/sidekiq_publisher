@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_job/queue_adapters/sidekiq_adapter"
+require "active_support/core_ext/object/blank"
 
 module ActiveJob
   module QueueAdapters
