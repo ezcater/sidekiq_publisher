@@ -41,6 +41,8 @@ Gem::Specification.new do |spec|
   spec.executables   = []
   spec.require_paths = ["lib"]
 
+  spec.required_ruby_version = ">= 2.6"
+
   spec.add_development_dependency "activejob"
   spec.add_development_dependency "appraisal"
   spec.add_development_dependency "bundler", "~> 1.12"
