@@ -12,6 +12,7 @@ jobs:
         environment:
           - POSTGRES_USER: postgres
           - POSTGRES_DB: sidekiq_publisher_test
+          - POSTGRES_HOST_AUTH_METHOD: trust
       - image: redis:5.0
     steps:
       - checkout
