@@ -5,7 +5,7 @@
   [(#44)](https://github.com/ezcater/sidekiq_publisher/pull/44). This change was
   made to better support Ruby 3.0 and Rails 6.1. The change is *not* expected to
   be breaking but it does represent a major change in the gem's implementation
-  change and that is the reason for the major version bump.
+  and that is the reason for the major version bump.
 - Require Ruby 2.6 or later.
 
 ## v1.8.0
