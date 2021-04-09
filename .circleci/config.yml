@@ -79,6 +79,11 @@ jobs:
             bundle exec appraisal rails-5.2-sidekiq-6.1 rspec --format RspecJunitFormatter --format progress
 
       - run:
+          name: rails-5.2-sidekiq-6.2
+          command: |
+            bundle exec appraisal rails-5.2-sidekiq-6.2 rspec --format RspecJunitFormatter --format progress
+
+      - run:
           name: rails-6.0-sidekiq-5.2
           command: |
             bundle exec appraisal rails-6.0-sidekiq-5.2 rspec --format RspecJunitFormatter --format progress
@@ -94,6 +99,11 @@ jobs:
             bundle exec appraisal rails-6.0-sidekiq-6.1 rspec --format RspecJunitFormatter --format progress
 
       - run:
+          name: rails-6.0-sidekiq-6.2
+          command: |
+            bundle exec appraisal rails-6.0-sidekiq-6.2 rspec --format RspecJunitFormatter --format progress
+
+      - run:
           name: rails-6.1-sidekiq-5.2
           command: |
             bundle exec appraisal rails-6.1-sidekiq-5.2 rspec --format RspecJunitFormatter --format progress
@@ -107,3 +117,8 @@ jobs:
           name: rails-6.1-sidekiq-6.1
           command: |
             bundle exec appraisal rails-6.1-sidekiq-6.1 rspec --format RspecJunitFormatter --format progress
+
+      - run:
+          name: rails-6.1-sidekiq-6.2
+          command: |
+            bundle exec appraisal rails-6.1-sidekiq-6.2 rspec --format RspecJunitFormatter --format progress
