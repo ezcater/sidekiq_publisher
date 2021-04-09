@@ -4,14 +4,15 @@ jobs:
     parallelism: 1
     working_directory: ~/ezcater
     docker:
-      - image: circleci/ruby:2.5.5
+      - image: circleci/ruby:2.6.7
         environment:
           - PGHOST: 127.0.0.1
           - PGUSER: postgres
-      - image: circleci/postgres:11.6
+      - image: circleci/postgres:12.6
         environment:
           - POSTGRES_USER: postgres
           - POSTGRES_DB: sidekiq_publisher_test
+          - POSTGRES_HOST_AUTH_METHOD: trust
       - image: redis:5.0
     steps:
       - checkout
@@ -50,10 +51,6 @@ jobs:
           command: bundle exec rubocop
 
       # Run tests for each appraisal
-      - run:
-          name: rails-5.1
-          command: bundle exec appraisal rails-5.1 rspec --format RspecJunitFormatter --format progress
-
       - run:
           name: rails-5.2-sidekiq-5.0
           command: |

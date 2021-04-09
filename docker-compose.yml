@@ -7,6 +7,7 @@ x-environment: &default-environment
   BUNDLE_IGNORE_CONFIG: 1
   BUNDLE_DISABLE_SHARED_GEMS: "true"
   PGUSER: postgres
+  PGPASSWORD: postgres
   PGHOST: sidekiq-publisher-postgres
   PGPORT: 5432
   PGDATABASE: sidekiq_publisher_test
@@ -28,9 +29,10 @@ services:
     image: redis:5.0.9-alpine
   sidekiq-publisher-postgres:
     container_name: sidekiq-publisher-postgres_1
-    image: postgres:11.6
+    image: postgres:12.6
     environment:
       POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: sidekiq_publisher_test
   sidekiq-publisher-console:
     <<: *default-service
