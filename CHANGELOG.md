@@ -1,5 +1,10 @@
 # sidekiq_publisher
 
+## (Unreleased)
+- Add support for sidekiq `7.0.0` by using `Sidekiq::Job` instead of
+  `Sidekiq::Worker` in sidekiq `>= 6.3.0` to handle name changes outlined in
+  mperham/sidekiq#4971 and first introduced in 6.2.2.
+
 ## 2.0.1
 - Changing the `Job#args` validator to be a manual check instead of using the `exclusions` validator.  This is to fix an issue introduced with rails 6.1 and the condition of `in: [nil]`.  More details [here](https://github.com/rails/rails/issues/41051).
 
