@@ -3,6 +3,7 @@
 require "active_support"
 require "active_support/core_ext/numeric/time"
 require "sidekiq_publisher/version"
+require "sidekiq_publisher/compatibility"
 require "sidekiq_publisher/instrumenter"
 require "sidekiq_publisher/metrics_reporter"
 require "sidekiq_publisher/exception_reporter"
