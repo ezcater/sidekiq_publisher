@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## (Unreleased)
+- Changing the `Job#args` validator to be a manual check instead of using the `exclusions` validator.  This is to fix an issue introduced with rails 6.1 and the condition of `in: [nil]`.  More details [here](https://github.com/rails/rails/issues/41051).
+
 ## v2.0.0
 - Transition from defining a Railtie to becoming a Rails Engine
   [(#44)](https://github.com/ezcater/sidekiq_publisher/pull/44). This change was
