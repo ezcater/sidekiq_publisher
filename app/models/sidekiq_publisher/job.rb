@@ -10,7 +10,11 @@ module SidekiqPublisher
     before_save :ensure_string_job_class
 
     validates :job_class, presence: true
-    validates :args, exclusion: { in: [nil] }
+    # This exclusion rule currently has a bug in rails 6.1. For now, we will use a manual implementation
+    # Github Issue: https://github.com/rails/rails/issues/41051
+    # Possible PR: https://github.com/rails/rails/pull/41412
+    # validates :args, exclusion: { in: [nil] }
+    validate :args_not_nil
 
     scope :unpublished, -> { where(published_at: nil) }
     scope :published, -> { where.not(published_at: nil) }
@@ -53,6 +57,10 @@ module SidekiqPublisher
     end
 
     private
+
+    def args_not_nil
+      errors.add(:args, "is reserved") if args.nil?
+    end
 
     def ensure_job_id
       self.job_id ||= self.class.generate_sidekiq_jid
