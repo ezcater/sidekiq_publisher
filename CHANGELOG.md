@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## (Unreleased)
+## 2.1.0
 - Add support for sidekiq `7.0.0` by using `Sidekiq::Job` instead of
   `Sidekiq::Worker` in sidekiq `>= 6.3.0` to handle name changes outlined in
   mperham/sidekiq#4971 and first introduced in 6.2.2.
