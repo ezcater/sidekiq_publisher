@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## (Unreleased)
+## 2.1.1
 - Opt-in to [Rubygems MFA](https://guides.rubygems.org/mfa-requirement-opt-in/)
   for privileged operations
 
