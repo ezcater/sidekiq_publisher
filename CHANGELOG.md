@@ -1,5 +1,11 @@
 # sidekiq_publisher
 
+## Unreleased
+- Add support for redis 5.0.0 by replacing pipelined commands.
+  - Also resolves deprecation warnings introduced in [redis 4.6.0]
+
+[redis 4.6.0]: https://github.com/redis/redis-rb/blob/master/CHANGELOG.md#460
+
 ## 2.1.1
 - Opt-in to [Rubygems MFA](https://guides.rubygems.org/mfa-requirement-opt-in/)
   for privileged operations
