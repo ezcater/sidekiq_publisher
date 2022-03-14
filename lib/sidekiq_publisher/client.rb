@@ -12,9 +12,9 @@ module SidekiqPublisher
 
       pushed = 0
       with_connection do |conn|
-        conn.multi do
+        conn.multi do |transaction|
           payloads.each do |payload|
-            atomic_push(conn, [payload])
+            atomic_push(transaction, [payload])
             pushed += 1
           end
         end
