@@ -31,5 +31,58 @@ tests:
       test: rubocop
       command: in_latest_ruby.sh bundle exec rubocop
   - run:
-      test: rspec
-      command: in_all_rubies.sh bundle exec rspec --profile 10 --format progress --format RspecJunitFormatter --out rspec.xml
+      test: bundle-appraisals
+      command: in_all_rubies.sh bundle exec appraisal install
+  # the appraisals for Rails 5.2 are disabled for now; if we want to keep them, we need to use
+  # an older version of the multiruby image, because 5.2 only supports up through ruby 2.6:
+  # - run:
+  #     test: rspec-rails-5.2-sidekiq-5.0
+  #     command: in_all_rubies.sh bundle exec appraisal rails-5.2-sidekiq-5.0 rspec --format RspecJunitFormatter --format progress
+  # - run:
+  #     test: rspec-rails-5.2-sidekiq-5.1
+  #     command: in_all_rubies.sh bundle exec appraisal rails-5.2-sidekiq-5.1 rspec --format RspecJunitFormatter --format progress
+  # - run:
+  #     test: rspec-rails-5.2-sidekiq-5.2
+  #     command: in_all_rubies.sh bundle exec appraisal rails-5.2-sidekiq-5.2 rspec --format RspecJunitFormatter --format progress
+  # - run:
+  #     test: rspec-rails-5.2-sidekiq-6.0
+  #     command: in_all_rubies.sh bundle exec appraisal rails-5.2-sidekiq-6.0 rspec --format RspecJunitFormatter --format progress
+  # - run:
+  #     test: rspec-rails-5.2-sidekiq-6.1
+  #     command: in_all_rubies.sh bundle exec appraisal rails-5.2-sidekiq-6.1 rspec --format RspecJunitFormatter --format progress
+  # - run:
+  #     test: rspec-rails-5.2-sidekiq-6.2
+  #     command: in_all_rubies.sh bundle exec appraisal rails-5.2-sidekiq-6.2 rspec --format RspecJunitFormatter --format progress
+  # - run:
+  #     test: rspec-rails-5.2-sidekiq-6.3
+  #     command: in_all_rubies.sh bundle exec appraisal rails-5.2-sidekiq-6.3 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.0-sidekiq-5.2
+      command: in_all_rubies.sh bundle exec appraisal rails-6.0-sidekiq-5.2 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.0-sidekiq-6.0
+      command: in_all_rubies.sh bundle exec appraisal rails-6.0-sidekiq-6.0 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.0-sidekiq-6.1
+      command: in_all_rubies.sh bundle exec appraisal rails-6.0-sidekiq-6.1 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.0-sidekiq-6.2
+      command: in_all_rubies.sh bundle exec appraisal rails-6.0-sidekiq-6.2 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.0-sidekiq-6.3
+      command: in_all_rubies.sh bundle exec appraisal rails-6.0-sidekiq-6.3 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.1-sidekiq-5.2
+      command: in_all_rubies.sh bundle exec appraisal rails-6.1-sidekiq-5.2 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.1-sidekiq-6.0
+      command: in_all_rubies.sh bundle exec appraisal rails-6.1-sidekiq-6.0 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.1-sidekiq-6.1
+      command: in_all_rubies.sh bundle exec appraisal rails-6.1-sidekiq-6.1 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.1-sidekiq-6.2
+      command: in_all_rubies.sh bundle exec appraisal rails-6.1-sidekiq-6.2 rspec --format RspecJunitFormatter --format progress
+  - run:
+      test: rspec-rails-6.1-sidekiq-6.3
+      command: in_all_rubies.sh bundle exec appraisal rails-6.1-sidekiq-6.3 rspec --format RspecJunitFormatter --format progress
