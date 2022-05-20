@@ -1,0 +1,5 @@
+#!/bin/bash
+. "$(dirname "$0")"/artifactory_setup
+docker-compose build || exit 1
+docker-compose run --rm sidekiq-publisher-console bin/setup \
+  && echo "Setup complete! Run 'docker/start' to start the console container"

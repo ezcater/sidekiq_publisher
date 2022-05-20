@@ -1,0 +1,10 @@
+#!/bin/bash
+if docker-compose exec -T sidekiq-publisher-console echo "Running in existing sidekiq-publisher-console container ..." 2>/dev/null
+then
+  run_or_exec="exec"
+else
+  run_or_exec="run --rm"
+fi
+
+. "$(dirname "$0")"/artifactory_setup
+docker-compose $run_or_exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" sidekiq-publisher-console bash -c "$*"

@@ -1,0 +1,4 @@
+#!/bin/bash
+. "$(dirname "$0")"/artifactory_setup
+docker-compose up $*
+rm -f tmp/pids/server.pid
