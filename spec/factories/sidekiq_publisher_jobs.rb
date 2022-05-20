@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :sidekiq_publisher_job,
-          class: SidekiqPublisher::Job,
-          aliases: %i(publisher_job unpublished_job) do
-
+  factory :sidekiq_publisher_job, class: SidekiqPublisher::Job, aliases: %i(publisher_job unpublished_job) do
     job_id { SidekiqPublisher::Job.generate_sidekiq_jid }
     job_class { "TestJobClass" }
     sequence(:args) { |n| Hash[x: n] }
