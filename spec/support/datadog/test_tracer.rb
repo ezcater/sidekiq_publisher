@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "ddtrace/tracer"
+require "datadog/tracing/tracer"
 
 module Datadog
-  class TestTracer < Tracer
+  class TestTracer < Tracing::Tracer
     attr_reader :traces
 
     def initialize

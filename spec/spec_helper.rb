@@ -36,7 +36,7 @@ Sidekiq.configure_client do |config|
 end
 
 Datadog.configure do |c|
-  c.tracer = Datadog::TestTracer.new
+  c.tracing.transport_options = proc { |t| t.adapter :test }
   c.env = "test"
 end
 
