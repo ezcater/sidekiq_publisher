@@ -1,0 +1,35 @@
+name: sidekiq-publisher
+owner: core-platform
+skip_production_deploy: true
+pipeline:
+  skip_push_image: true
+deployables: []
+tests:
+  primary:
+  - name: sidekiq-publisher
+    build: .
+    command: tail -f /dev/null
+    junit: rspec.xml
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ezcater
+      REDIS_URL: redis://localhost:6379/1
+  services:
+  - name: postgres
+    image: postgres:13.2-alpine
+    environment:
+      POSTGRES_DATABASE: sidekiq_publisher_test
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ezcater
+  - name: redis
+    image: redis:5.0.9-alpine
+  steps:
+  - run:
+      test: bundle
+      command: in_all_rubies.sh bundle
+  - run:
+      test: rubocop
+      command: in_latest_ruby.sh bundle exec rubocop
+  - run:
+      test: rspec
+      command: in_all_rubies.sh bundle exec rspec --profile 10 --format progress --format RspecJunitFormatter --out rspec.xml
