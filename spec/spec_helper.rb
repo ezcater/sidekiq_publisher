@@ -28,11 +28,11 @@ SidekiqPublisher.logger = logger
 
 Sidekiq::Testing.disable!
 
-DATABASE_NAME = "sidekiq_publisher_test"
-REDIS_URL = ENV.fetch("REDIS_URL", "redis://localhost:6379")
-
 Sidekiq.configure_client do |config|
-  config.redis = { namespace: "sidekiq_publisher_test", url: REDIS_URL }
+  config.redis = {
+    namespace: "sidekiq_publisher_test",
+    url: ENV.fetch("REDIS_URL", "redis://localhost:6379"),
+  }
 end
 
 Datadog.configure do |c|
@@ -61,26 +61,36 @@ RSpec.configure do |config|
     FactoryBot.find_definitions
   end
 
+  pg = {
+    database: ENV.fetch("POSTGRES_DATABASE", "sidekiq_publisher_test"),
+    host: ENV.fetch("POSTGRES_HOST", "localhost"),
+    port: ENV.fetch("POSTGRES_PORT", 5432),
+    username: ENV.fetch("POSTGRES_USER", "ezcater"),
+    password: ENV.fetch("POSTGRES_PASSWORD", "password"),
+  }.freeze
+
   config.before(:suite) do
-    pg_version = `psql -t -c "select version()";`.strip
+    pw_env = "PGPASSWORD=#{pg[:password]}"
+    opts = "-h #{pg[:host]} -p #{pg[:port]} -U #{pg[:username]}"
+
+    pg_version = `#{pw_env} psql #{opts} -t -c "select version()";`.strip
     puts "Testing with Postgres version: #{pg_version}"
     puts "Testing with ActiveRecord #{ActiveRecord::VERSION::STRING}"
 
-    `dropdb --if-exists #{DATABASE_NAME} 2> /dev/null`
-    `createdb #{DATABASE_NAME}`
+    `#{pw_env} dropdb #{opts} --if-exists #{pg[:database]} 2> /dev/null`
+    `#{pw_env} createdb #{opts} #{pg[:database]}`
 
-    host = ENV.fetch("PGHOST", "localhost")
-    port = ENV.fetch("PGPORT", 5432)
-    database_url = "postgres://#{host}:#{port}/#{DATABASE_NAME}"
-    puts "Using database #{database_url}"
-    ActiveRecord::Base.establish_connection(database_url)
+    puts "Using database postgres://#{pg[:host]}:#{pg[:port]}/#{pg[:database]}"
+
+    ActiveRecord::Base.establish_connection(pg.merge(adapter: "postgresql"))
     ActiveRecord::Migration.verbose = false
     require "#{__dir__}/db/schema"
   end
 
   config.after(:suite) do
     ActiveRecord::Base.clear_all_connections!
-    `dropdb --if-exists #{DATABASE_NAME}`
+    opts = "-h #{pg[:host]} -p #{pg[:port]} -U #{pg[:username]}"
+    `PGPASSWORD=#{pg[:password]} dropdb #{opts} --if-exists #{pg[:database]}`
   end
 
   config.before do

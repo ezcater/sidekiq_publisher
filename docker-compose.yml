@@ -6,11 +6,11 @@ x-environment: &default-environment
   PRYRC: /usr/src/app/.docker-pryrc
   BUNDLE_IGNORE_CONFIG: 1
   BUNDLE_DISABLE_SHARED_GEMS: "true"
-  PGUSER: postgres
-  PGPASSWORD: postgres
-  PGHOST: sidekiq-publisher-postgres
-  PGPORT: 5432
-  PGDATABASE: sidekiq_publisher_test
+  POSTGRES_DATABASE: sidekiq_publisher_test
+  POSTGRES_HOST: sidekiq-publisher-postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: postgres
   REDIS_URL: redis://sidekiq-publisher-redis:6379
 x-service: &default-service
   build:
@@ -31,9 +31,9 @@ services:
     container_name: sidekiq-publisher-postgres_1
     image: postgres:12.6
     environment:
-      POSTGRES_USER: postgres
+      POSTGRES_DATABASE: sidekiq_publisher_test
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: sidekiq_publisher_test
+      POSTGRES_USER: postgres
   sidekiq-publisher-console:
     <<: *default-service
     container_name: sidekiq-publisher-console_1
