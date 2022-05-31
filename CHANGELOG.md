@@ -9,6 +9,8 @@
 - Restricts sidekiq to < 6.4.2 due to an incompatability
   - [issue tracking this](https://github.com/ezcater/sidekiq_publisher/issues/55)
 
+- Restricts ddtrace to < 1.0.0 due to an incompatability
+
 ## 2.1.1
 - Opt-in to [Rubygems MFA](https://guides.rubygems.org/mfa-requirement-opt-in/)
   for privileged operations
