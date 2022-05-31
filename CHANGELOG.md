@@ -1,10 +1,15 @@
 # sidekiq_publisher
 
-## Unreleased
+## 2.2.0
 - Add support for redis 5.0.0 by replacing pipelined commands.
   - Also resolves deprecation warnings introduced in [redis 4.6.0]
 
 [redis 4.6.0]: https://github.com/redis/redis-rb/blob/master/CHANGELOG.md#460
+
+- Restricts sidekiq to < 6.4.2 due to an incompatability
+  - [issue tracking this](https://github.com/ezcater/sidekiq_publisher/issues/55)
+
+- Restricts ddtrace to < 1.0.0 due to an incompatability
 
 ## 2.1.1
 - Opt-in to [Rubygems MFA](https://guides.rubygems.org/mfa-requirement-opt-in/)
