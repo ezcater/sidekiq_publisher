@@ -1,10 +1,41 @@
 # frozen_string_literal: true
 
 RSpec.describe SidekiqPublisher::DatadogAPM do
+  test_tracer_class = begin
+                        Datadog::Tracing::Tracer
+                      rescue NameError
+                        Datadog::Tracer
+                      end
+
+  class TestTracer < test_tracer_class
+    attr_reader :traces
+
+    def initialize(*)
+      super
+
+      @traces = []
+    end
+
+    def write(trace)
+      @traces << trace # rubocop:disable RSpec/InstanceVariable
+      super
+    end
+  end
+
   let(:instrumenter) { SidekiqPublisher::Instrumenter.new }
   let(:service) { "sidekiq-publisher" }
-  let(:trace) { Datadog.tracer.traces.first }
-  let(:span) { trace.first }
+  let(:span) { tracer_instance.traces.first.spans.first }
+  let(:tracer_instance) { TestTracer.new }
+
+  before do
+    Datadog.configure do |c|
+      if c.respond_to?(:tracing)
+        c.tracing.instance = tracer_instance
+      else
+        c.tracer = tracer_instance
+      end
+    end
+  end
 
   describe ".service" do
     context "when unset" do
@@ -94,7 +125,6 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
           notification[:published_count] = published_count
         end
       end
-      span = trace.last
       expect(span).to have_tag(:published_count).with_value(published_count)
       expect(span.service).to eq(service)
       expect(span.name).to eq("publisher.enqueue_batch")
@@ -109,7 +139,7 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
     let(:payload) { { exception_object: error, exception: [error.class.name, error.message] } }
 
     it "adds an error to the current span" do
-      Datadog.tracer.trace("example") do
+      described_class.tracer.trace("example") do
         instrumenter.instrument("error.publisher", payload)
       end
 
@@ -134,7 +164,7 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
 
   matcher :have_tag do |name|
     match do |span|
-      tag = span.get_tag(name)
+      tag = span.get_tag(name.to_s)
       values_match?(value, tag)
     end
 
