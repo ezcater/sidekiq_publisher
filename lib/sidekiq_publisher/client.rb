@@ -7,7 +7,10 @@ module SidekiqPublisher
     def bulk_push(items)
       payloads = items.map do |item|
         normed = normalize_item(item)
-        process_single(item["class"], normed) || nil
+        middleware.invoke(item["class"], normed, normed["queue"], @redis_pool) do
+          verify_json(normed) if respond_to?(:verify_json) # needed here as of v6.4.2, formerly done by normalize_item
+          normed
+        end || nil
       end.compact
 
       pushed = 0
