@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## 2.3.0
+- Add compatibility with sidekiq 6.4.2.
+
 ## 2.2.0
 - Add support for redis 5.0.0 by replacing pipelined commands.
   - Also resolves deprecation warnings introduced in [redis 4.6.0]
