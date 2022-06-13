@@ -1,7 +1,10 @@
 # sidekiq_publisher
 
-## Unreleased
+## (Unreleased)
+
+## 2.3.0
 - Add support for ddtrace 1.x.
+- Add support for sidekiq 6.4.2+.
 
 ## 2.2.0
 - Add support for redis 5.0.0 by replacing pipelined commands.
