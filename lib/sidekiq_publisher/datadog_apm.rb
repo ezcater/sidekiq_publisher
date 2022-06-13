@@ -13,6 +13,10 @@ module SidekiqPublisher
       def service
         @service || "sidekiq-publisher"
       end
+
+      def tracer
+        defined?(Datadog::Tracing) ? Datadog::Tracing : Datadog.tracer
+      end
     end
 
     class Subscriber
@@ -28,7 +32,7 @@ module SidekiqPublisher
 
       def start_span(operation, payload, resource = nil)
         resource ||= operation
-        payload[:datadog_span] = Datadog.tracer.trace(operation, service: service, resource: resource)
+        payload[:datadog_span] = tracer.trace(operation, service: service, resource: resource)
       end
 
       def start_primary_span(resource, payload)
@@ -42,6 +46,10 @@ module SidekiqPublisher
 
       def service
         SidekiqPublisher::DatadogAPM.service
+      end
+
+      def tracer
+        SidekiqPublisher::DatadogAPM.tracer
       end
     end
 
@@ -97,7 +105,7 @@ module SidekiqPublisher
     # and responds to the error(.publisher.sidekiq_publisher) event.
     class PublisherErrorSubscriber < ActiveSupport::Subscriber
       def error(event)
-        Datadog.tracer.active_span&.set_error(event.payload[:exception_object])
+        SidekiqPublisher::DatadogAPM.tracer.active_span&.set_error(event.payload[:exception_object])
       end
 
       attach_to "publisher.sidekiq_publisher"

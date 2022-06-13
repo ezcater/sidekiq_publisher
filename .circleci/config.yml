@@ -147,3 +147,13 @@ jobs:
           name: rails-6.1-sidekiq-6.4
           command: |
             bundle exec appraisal rails-6.1-sidekiq-6.4 rspec --format RspecJunitFormatter --format progress
+
+      - run:
+          name: rails-6.1-sidekiq-6.4-ddtrace-0-x
+          command: |
+            bundle exec appraisal rails-6.1-sidekiq-6.4-ddtrace-0-x rspec --format RspecJunitFormatter --format progress
+
+      - run:
+          name: rails-6.1-sidekiq-6.4-ddtrace-1-x
+          command: |
+            bundle exec appraisal rails-6.1-sidekiq-6.4-ddtrace-0-x rspec --format RspecJunitFormatter --format progress

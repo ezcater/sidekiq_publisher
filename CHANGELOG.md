@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## Unreleased
+- Add support for ddtrace 1.x.
+
 ## 2.2.0
 - Add support for redis 5.0.0 by replacing pipelined commands.
   - Also resolves deprecation warnings introduced in [redis 4.6.0]

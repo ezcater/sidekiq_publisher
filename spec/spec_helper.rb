@@ -36,8 +36,9 @@ Sidekiq.configure_client do |config|
 end
 
 Datadog.configure do |c|
-  c.tracer = Datadog::TestTracer.new
   c.env = "test"
+
+  (c.respond_to?(:tracing) ? c.tracing : c.tracer).transport_options = proc { |t| t.adapter :test }
 end
 
 RSpec.configure do |config|
@@ -97,8 +98,6 @@ RSpec.configure do |config|
   config.after do |example|
     DatabaseCleaner.clean unless example.metadata.fetch(:skip_db_clean, false)
   end
-
-  config.after { Datadog.tracer.reset! }
 end
 
 Shoulda::Matchers.configure do |config|
