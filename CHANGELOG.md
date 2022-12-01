@@ -2,6 +2,9 @@
 
 ## (Unreleased)
 
+## 2.4.0
+- Update active_support dependency to allow any active_support 7.x.x version
+
 ## 2.3.0
 - Add support for ddtrace 1.x.
 - Add support for sidekiq 6.4.2+.
