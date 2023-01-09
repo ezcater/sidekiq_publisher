@@ -1,6 +1,7 @@
 # sidekiq_publisher
 
 ## (Unreleased)
+- Drop support for Rails 5.2.
 
 ## 2.4.0
 - Update active_support dependency to allow any active_support 7.x.x version
