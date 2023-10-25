@@ -24,7 +24,10 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
 
   let(:instrumenter) { SidekiqPublisher::Instrumenter.new }
   let(:service) { "sidekiq-publisher" }
-  let(:span) { tracer_instance.traces.first.spans.first }
+  let(:span) do
+    puts tracer_instance.traces
+    tracer_instance.traces.first.spans.first
+  end
   let(:tracer_instance) { TestTracer.new }
 
   before do
