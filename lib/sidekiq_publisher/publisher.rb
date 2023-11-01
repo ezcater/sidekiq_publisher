@@ -32,8 +32,8 @@ module SidekiqPublisher
         end
       end
       purge_expired_published_jobs
-    rescue StandardError => ex
-      failure_warning(__method__, ex)
+    rescue StandardError => e
+      failure_warning(__method__, e)
     end
 
     private
@@ -43,8 +43,8 @@ module SidekiqPublisher
     def enqueue_batch(batch, items, notification)
       pushed_count = client.bulk_push(items)
       published_count = update_jobs_as_published!(batch)
-    rescue StandardError => ex
-      failure_warning(__method__, ex)
+    rescue StandardError => e
+      failure_warning(__method__, e)
     ensure
       published_count = update_jobs_as_published!(batch) if pushed_count.present? && published_count.nil?
       notification[:published_count] = published_count if published_count.present?

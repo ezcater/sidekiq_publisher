@@ -7,7 +7,7 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
                         Datadog::Tracer
                       end
 
-  class TestTracer < test_tracer_class
+  class TestTracer < test_tracer_class # rubocop:disable RSpec/LeakyConstantDeclaration
     attr_reader :traces
 
     def initialize(*)
