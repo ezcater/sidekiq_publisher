@@ -24,10 +24,7 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
 
   let(:instrumenter) { SidekiqPublisher::Instrumenter.new }
   let(:service) { "sidekiq-publisher" }
-  let(:span) do
-    puts tracer_instance.traces
-    tracer_instance.traces.first.spans.first
-  end
+  let(:span) { tracer_instance.traces.first.spans.first }
   let(:tracer_instance) { TestTracer.new }
 
   before do
@@ -183,7 +180,7 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
 
     match do |span|
       self.error_type = span.get_tag("error.type")
-      self.error_msg = span.get_tag("error.message").presence || span.get_tag("error.msg")
+      self.error_msg = span.get_tag("error.message")
       values_match?(expected.class.name, error_type) && values_match?(expected.message, error_msg)
     end
 
