@@ -1,6 +1,10 @@
 # sidekiq_publisher
 
-## (Unreleased)
+## (unreleased; 3.x)
+- BREAKING: Drop support for Ruby `2.6` and `2.7` as they are [past end of life](https://endoflife.date/ruby)
+- BREAKING: Drop support for `ddtrace <= 1.8.0`
+- BREAKING: Drop support for Redis `5.x`
+- (internal) Move CI to Github workflows
 
 ## 2.4.0
 - Update active_support dependency to allow any active_support 7.x.x version
