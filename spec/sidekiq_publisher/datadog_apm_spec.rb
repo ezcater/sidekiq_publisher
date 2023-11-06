@@ -183,7 +183,7 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
 
     match do |span|
       self.error_type = span.get_tag("error.type")
-      self.error_msg = span.get_tag("error.msg")
+      self.error_msg = span.get_tag("error.message").presence || span.get_tag("error.msg")
       values_match?(expected.class.name, error_type) && values_match?(expected.message, error_msg)
     end
 
