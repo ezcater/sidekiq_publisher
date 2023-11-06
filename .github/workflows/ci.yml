@@ -51,20 +51,10 @@ jobs:
           POSTGRES_PASSWORD: "postgres"
           POSTGRES_DB: sidekiq_publisher_test
           POSTGRES_HOST_AUTH_METHOD: trust
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
         ports:
           - 5432:5432
       redis:
         image: redis:6.0.20-alpine
-        options: >-
-          --health-cmd "redis-cli ping | grep PONG"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
         ports:
           - 6379:6379
 
