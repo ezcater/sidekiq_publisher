@@ -1,31 +1,26 @@
 # frozen_string_literal: true
 
 RSpec.describe SidekiqPublisher::DatadogAPM do
-  test_tracer_class = begin
-                        Datadog::Tracing::Tracer
-                      rescue NameError
-                        Datadog::Tracer
-                      end
-
-  class TestTracer < test_tracer_class # rubocop:disable RSpec/LeakyConstantDeclaration
-    attr_reader :traces
-
-    def initialize(*)
-      super
-
-      @traces = []
-    end
-
-    def write(trace)
-      @traces << trace # rubocop:disable RSpec/InstanceVariable
-      super
-    end
-  end
-
   let(:instrumenter) { SidekiqPublisher::Instrumenter.new }
   let(:service) { "sidekiq-publisher" }
   let(:span) { tracer_instance.traces.first.spans.first }
-  let(:tracer_instance) { TestTracer.new }
+  let(:tracer_instance) { test_tracer_class.new }
+  let(:test_tracer_class) do
+    Class.new(Datadog::Tracing::Tracer) do
+      attr_reader :traces
+
+      def initialize(*)
+        super
+
+        @traces = []
+      end
+
+      def write(trace)
+        @traces << trace
+        super
+      end
+    end
+  end
 
   before do
     Datadog.configure do |c|
