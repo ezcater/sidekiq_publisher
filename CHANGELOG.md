@@ -1,6 +1,6 @@
 # sidekiq_publisher
 
-## (unreleased; 3.x)
+## (3.0.0)
 - BREAKING: Drop support for Ruby `2.6` and `2.7` as they are [past end of life](https://endoflife.date/ruby)
 - BREAKING: Drop support for `ddtrace <= 1.8.0`
 - BREAKING: Drop support for Redis `5.x`
