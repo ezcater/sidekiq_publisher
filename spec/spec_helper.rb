@@ -38,7 +38,7 @@ end
 Datadog.configure do |c|
   c.env = "test"
 
-  (c.respond_to?(:tracing) ? c.tracing : c.tracer).transport_options = proc { |t| t.adapter :test }
+  c.tracing.transport_options = proc { |t| t.adapter :test }
 end
 
 RSpec.configure do |config|
