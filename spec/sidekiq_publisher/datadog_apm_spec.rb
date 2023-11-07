@@ -24,11 +24,7 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
 
   before do
     Datadog.configure do |c|
-      if c.respond_to?(:tracing)
-        c.tracing.instance = tracer_instance
-      else
-        c.tracer = tracer_instance
-      end
+      c.tracing.instance = tracer_instance
     end
   end
 
