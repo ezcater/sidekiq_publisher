@@ -1,9 +1,7 @@
 # sidekiq_publisher
 
-[![Gem Version][gem_badge]][gem_link] [![CircleCI][circle_badge]][circle_link]
+[![Gem Version][gem_badge]][gem_link]
 
-[circle_badge]: https://circleci.com/gh/ezcater/sidekiq_publisher.svg?style=svg
-[circle_link]: https://circleci.com/gh/ezcater/sidekiq_publisher
 [gem_badge]: https://badge.fury.io/rb/sidekiq_publisher.svg
 [gem_link]: https://badge.fury.io/rb/sidekiq_publisher
 
