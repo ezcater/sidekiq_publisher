@@ -15,7 +15,7 @@ module SidekiqPublisher
       end
 
       def tracer
-        defined?(Datadog::Tracing) ? Datadog::Tracing : Datadog.tracer
+        Datadog::Tracing
       end
     end
 

@@ -92,7 +92,7 @@ RSpec.describe SidekiqPublisher::Worker do
     end
   end
 
-  context ".perform_in" do
+  describe ".perform_in" do
     it "creates a SidekiqPublisher job" do
       TestWorker.perform_in(1.hour, *args)
 
@@ -102,7 +102,7 @@ RSpec.describe SidekiqPublisher::Worker do
     end
   end
 
-  context ".perform_at" do
+  describe ".perform_at" do
     let(:run_at) { 2.hours.from_now }
 
     it "creates a SidekiqPublisher job" do

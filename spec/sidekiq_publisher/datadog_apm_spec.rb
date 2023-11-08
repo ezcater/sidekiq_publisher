@@ -1,39 +1,30 @@
 # frozen_string_literal: true
 
 RSpec.describe SidekiqPublisher::DatadogAPM do
-  test_tracer_class = begin
-                        Datadog::Tracing::Tracer
-                      rescue NameError
-                        Datadog::Tracer
-                      end
-
-  class TestTracer < test_tracer_class
-    attr_reader :traces
-
-    def initialize(*)
-      super
-
-      @traces = []
-    end
-
-    def write(trace)
-      @traces << trace # rubocop:disable RSpec/InstanceVariable
-      super
-    end
-  end
-
   let(:instrumenter) { SidekiqPublisher::Instrumenter.new }
   let(:service) { "sidekiq-publisher" }
   let(:span) { tracer_instance.traces.first.spans.first }
-  let(:tracer_instance) { TestTracer.new }
+  let(:tracer_instance) { test_tracer_class.new }
+  let(:test_tracer_class) do
+    Class.new(Datadog::Tracing::Tracer) do
+      attr_reader :traces
+
+      def initialize(*)
+        super
+
+        @traces = []
+      end
+
+      def write(trace)
+        @traces << trace
+        super
+      end
+    end
+  end
 
   before do
     Datadog.configure do |c|
-      if c.respond_to?(:tracing)
-        c.tracing.instance = tracer_instance
-      else
-        c.tracer = tracer_instance
-      end
+      c.tracing.instance = tracer_instance
     end
   end
 
@@ -180,7 +171,7 @@ RSpec.describe SidekiqPublisher::DatadogAPM do
 
     match do |span|
       self.error_type = span.get_tag("error.type")
-      self.error_msg = span.get_tag("error.msg")
+      self.error_msg = span.get_tag("error.message")
       values_match?(expected.class.name, error_type) && values_match?(expected.message, error_msg)
     end
 

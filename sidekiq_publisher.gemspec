@@ -47,9 +47,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "appraisal"
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "database_cleaner"
-  spec.add_development_dependency "ddtrace", ">= 0.39.0"
+  spec.add_development_dependency "ddtrace", ">= 1.8.0"
   spec.add_development_dependency "ezcater_matchers"
-  spec.add_development_dependency "ezcater_rubocop", "1.0.2"
+  spec.add_development_dependency "ezcater_rubocop", ">= 3.0.2", "< 4.0"
   spec.add_development_dependency "factory_bot"
   spec.add_development_dependency "overcommit"
   spec.add_development_dependency "rake"
@@ -60,6 +60,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov", "< 0.18"
 
   spec.add_runtime_dependency "activerecord-postgres_pub_sub", ">= 0.4.0"
-  spec.add_runtime_dependency "activesupport", ">= 5.1", "< 7.1"
+  spec.add_runtime_dependency "activesupport", ">= 6.1", "< 7.1"
   spec.add_runtime_dependency "sidekiq", ">= 5.0.4", "< 7"
 end
