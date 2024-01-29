@@ -10,7 +10,11 @@ module SidekiqPublisher
 
     module ClassMethods
       def client_push(item)
-        SidekiqPublisher::Job.create_job!(item)
+        if ActiveRecord::Base.connection.transaction_open?
+          SidekiqPublisher::Job.create_job!(item)
+        else
+          super
+        end
       end
     end
   end
