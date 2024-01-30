@@ -29,9 +29,12 @@ RSpec.describe SidekiqPublisher::Worker do
         "args" => args
       )
 
-      expect(redis.llen("queue:default")).to eq(1)
-      expect(JSON.parse(redis.lindex("queue:default", 0))).
-        to include("class" => "TestWorker", "args" => args)
+      queue = Sidekiq::Queue.new("default")
+      expect(queue.size).to eq(1)
+
+      sidekiq_job = queue.first
+      expect(sidekiq_job.display_class).to eq("TestWorker")
+      expect(sidekiq_job.display_args).to eq(args)
     end
   end
 
@@ -51,9 +54,12 @@ RSpec.describe SidekiqPublisher::Worker do
 
         expect(job).to be_nil
 
-        expect(redis.llen("queue:default")).to eq(1)
-        expect(JSON.parse(redis.lindex("queue:default", 0))).
-          to include("class" => "TestWorker", "args" => args)
+        queue = Sidekiq::Queue.new("default")
+        expect(queue.size).to eq(1)
+
+        sidekiq_job = queue.first
+        expect(sidekiq_job.display_class).to eq("TestWorker")
+        expect(sidekiq_job.display_args).to eq(args)
       end
     end
 
