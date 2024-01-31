@@ -16,6 +16,11 @@ that modifies the system of record for the application. It also allows jobs to
 be created even when Sidekiq/Redis is temporarily unavailable. The separate
 publisher process handles retries and ensure that each job is delivered to Sidekiq.
 
+> :warning: Not all jobs are staged in Postgres. This is determined dynamically:
+> if the job is enqueued from within an `ActiveRecord` transaction, then it is
+> staged in Postgres. If not, then it bypasses Postgres and is enqueued directly
+> to Redis via Sidekiq.
+
 ## Installation
 
 Add this line to your application's Gemfile:
