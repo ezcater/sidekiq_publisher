@@ -32,13 +32,24 @@ RSpec.describe ActiveJob::QueueAdapters::SidekiqPublisherAdapter do
           "provider_job_id" => job.job_id
         )
       end
+
+      it "does not enqueue directly to Redis" do
+        active_job.enqueue
+
+        queue = Sidekiq::Queue.new("default")
+        expect(queue.size).to eq(0)
+      end
     end
 
     context "when not in a transaction", skip_db_clean: true do
-      it "enqueues directly to Redis via Sidekiq" do
+      it "does not create a SidekiqPublisher job record" do
         active_job.enqueue
 
         expect(job).to be_nil
+      end
+
+      it "enqueues directly to Redis via Sidekiq" do
+        active_job.enqueue
 
         queue = Sidekiq::Queue.new("default")
         expect(queue.size).to eq(1)
@@ -54,7 +65,7 @@ RSpec.describe ActiveJob::QueueAdapters::SidekiqPublisherAdapter do
     let(:scheduled_at) { 1.hour.from_now }
 
     context "when in a transaction" do
-      it "creates a SidekiqPublisher job with a run_at value" do
+      it "creates a SidekiqPublisher job record with a run_at value" do
         active_job.enqueue(wait_until: scheduled_at)
 
         expect(job.job_class).to eq(described_class::JOB_WRAPPER_CLASS)
@@ -66,13 +77,24 @@ RSpec.describe ActiveJob::QueueAdapters::SidekiqPublisherAdapter do
         )
         expect(job.run_at).to be_within(1).of(scheduled_at.to_f)
       end
+
+      it "does not enqueue directly to Redis" do
+        active_job.enqueue(wait_until: scheduled_at)
+
+        queue = Sidekiq::ScheduledSet.new
+        expect(queue.size).to eq(0)
+      end
     end
 
     context "when not in a transaction", skip_db_clean: true do
-      it "enqueues directly to Redis via Sidekiq" do
+      it "does not create a SidekiqPublisher job record" do
         active_job.enqueue(wait_until: scheduled_at)
 
         expect(job).to be_nil
+      end
+
+      it "enqueues directly to Redis via Sidekiq" do
+        active_job.enqueue(wait_until: scheduled_at)
 
         queue = Sidekiq::ScheduledSet.new
         expect(queue.size).to eq(1)
@@ -94,13 +116,24 @@ RSpec.describe ActiveJob::QueueAdapters::SidekiqPublisherAdapter do
         expect(job.wrapped).to eq("TestJob")
         expect(job.args.dig(0, "arguments")).to eq(args)
       end
+
+      it "does not enqueue directly to Redis" do
+        job_class.perform_later(*args)
+
+        queue = Sidekiq::Queue.new("default")
+        expect(queue.size).to eq(0)
+      end
     end
 
     context "when not in a transaction", skip_db_clean: true do
-      it "enqueues directly to Redis via Sidekiq" do
+      it "does not create a SidekiqPublisher job record" do
         job_class.perform_later(*args)
 
         expect(job).to be_nil
+      end
+
+      it "enqueues directly to Redis via Sidekiq" do
+        job_class.perform_later(*args)
 
         queue = Sidekiq::Queue.new("default")
         expect(queue.size).to eq(1)
