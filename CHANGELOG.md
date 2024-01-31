@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+## 4.0.0
+- BREAKING: Enqueue directly to Redis unless in a transaction ([#74](https://github.com/ezcater/sidekiq_publisher/pull/74/))
+
 ## 3.0.0
 - BREAKING: Drop support for Ruby `2.6` and `2.7` as they are [past end of life](https://endoflife.date/ruby)
 - BREAKING: Drop support for `ddtrace <= 1.8.0`
