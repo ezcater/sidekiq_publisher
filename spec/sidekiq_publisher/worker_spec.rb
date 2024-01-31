@@ -14,12 +14,7 @@ RSpec.describe SidekiqPublisher::Worker do
 
   before do
     stub_const("TestWorker", worker_class)
-
-    Sidekiq.redis do |conn|
-      conn.scan_each do |key|
-        conn.del(key)
-      end
-    end
+    clear_redis
   end
 
   describe ".sidekiq_client_push" do
