@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sidekiq/api"
+
 RSpec.describe SidekiqPublisher::Worker do
   let(:worker_class) do
     Class.new do
@@ -8,40 +10,63 @@ RSpec.describe SidekiqPublisher::Worker do
   end
   let(:args) { [1, 2, 3] }
   let(:job) { SidekiqPublisher::Job.last }
+  let(:redis) { Sidekiq.redis { |conn| conn } }
 
   before do
     stub_const("TestWorker", worker_class)
+    clear_redis
   end
 
   describe ".sidekiq_client_push" do
-    let(:redis) { Sidekiq.redis { |conn| conn } }
-
-    before do
-      Sidekiq.redis do |conn|
-        conn.scan_each do |key|
-          conn.del(key)
-        end
-      end
-    end
-
     it "aliases Sidekiq::Worker's client_push method" do
       TestWorker.sidekiq_client_push(
         "class" => TestWorker,
         "args" => args
       )
 
-      expect(redis.llen("queue:default")).to eq(1)
-      expect(JSON.parse(redis.lindex("queue:default", 0))).
-        to include("class" => "TestWorker", "args" => args)
+      queue = Sidekiq::Queue.new("default")
+      expect(queue.size).to eq(1)
+
+      sidekiq_job = queue.first
+      expect(sidekiq_job.display_class).to eq("TestWorker")
+      expect(sidekiq_job.display_args).to eq(args)
     end
   end
 
   describe ".perform_async" do
-    it "creates a SidekiqPublisher job" do
-      TestWorker.perform_async(*args)
+    context "when in a transaction" do
+      it "creates a SidekiqPublisher job record" do
+        TestWorker.perform_async(*args)
 
-      expect(job.job_class).to eq("TestWorker")
-      expect(job.args).to eq(args)
+        expect(job.job_class).to eq("TestWorker")
+        expect(job.args).to eq(args)
+      end
+
+      it "does not enqueue directly to Redis" do
+        TestWorker.perform_async(*args)
+
+        queue = Sidekiq::Queue.new("default")
+        expect(queue.size).to eq(0)
+      end
+    end
+
+    context "when not in a transaction", skip_db_clean: true do
+      it "does not create a SidekiqPublisher job record" do
+        TestWorker.perform_async(*args)
+
+        expect(job).to be_nil
+      end
+
+      it "enqueues directly to Redis via Sidekiq" do
+        TestWorker.perform_async(*args)
+
+        queue = Sidekiq::Queue.new("default")
+        expect(queue.size).to eq(1)
+
+        sidekiq_job = queue.first
+        expect(sidekiq_job.display_class).to eq("TestWorker")
+        expect(sidekiq_job.display_args).to eq(args)
+      end
     end
 
     context "when Sidekiq::Testing mode is inline" do
@@ -93,24 +118,82 @@ RSpec.describe SidekiqPublisher::Worker do
   end
 
   describe ".perform_in" do
-    it "creates a SidekiqPublisher job" do
-      TestWorker.perform_in(1.hour, *args)
+    context "when in a transaction" do
+      it "creates a SidekiqPublisher job record" do
+        TestWorker.perform_in(1.hour, *args)
 
-      expect(job.job_class).to eq("TestWorker")
-      expect(job.args).to eq(args)
-      expect(job.run_at).to be_within(1).of(1.hour.from_now.to_f)
+        expect(job.job_class).to eq("TestWorker")
+        expect(job.args).to eq(args)
+        expect(job.run_at).to be_within(1).of(1.hour.from_now.to_f)
+      end
+
+      it "does not enqueue directly to Redis" do
+        TestWorker.perform_in(1.hour, *args)
+
+        queue = Sidekiq::ScheduledSet.new
+        expect(queue.size).to eq(0)
+      end
+    end
+
+    context "when not in a transaction", skip_db_clean: true do
+      it "does not create a SidekiqPublisher job record" do
+        TestWorker.perform_in(1.hour, *args)
+
+        expect(job).to be_nil
+      end
+
+      it "enqueues directly to Redis via Sidekiq" do
+        TestWorker.perform_in(1.hour, *args)
+
+        queue = Sidekiq::ScheduledSet.new
+        expect(queue.size).to eq(1)
+
+        sidekiq_job = queue.first
+        expect(sidekiq_job.display_class).to eq("TestWorker")
+        expect(sidekiq_job.display_args).to eq(args)
+        expect(sidekiq_job.at).to be_within(1).of(1.hour.from_now)
+      end
     end
   end
 
   describe ".perform_at" do
     let(:run_at) { 2.hours.from_now }
 
-    it "creates a SidekiqPublisher job" do
-      TestWorker.perform_at(run_at, *args)
+    context "when in a transaction" do
+      it "creates a SidekiqPublisher job record" do
+        TestWorker.perform_at(run_at, *args)
 
-      expect(job.job_class).to eq("TestWorker")
-      expect(job.args).to eq(args)
-      expect(job.run_at).to be_within(1).of(run_at.to_f)
+        expect(job.job_class).to eq("TestWorker")
+        expect(job.args).to eq(args)
+        expect(job.run_at).to be_within(1).of(run_at.to_f)
+      end
+
+      it "does not enqueue directly to Redis" do
+        TestWorker.perform_at(run_at, *args)
+
+        queue = Sidekiq::ScheduledSet.new
+        expect(queue.size).to eq(0)
+      end
+    end
+
+    context "when not in a transaction", skip_db_clean: true do
+      it "does not create a SidekiqPublisher job record" do
+        TestWorker.perform_at(run_at, *args)
+
+        expect(job).to be_nil
+      end
+
+      it "enqueues directly to Redis via Sidekiq" do
+        TestWorker.perform_at(run_at, *args)
+
+        queue = Sidekiq::ScheduledSet.new
+        expect(queue.size).to eq(1)
+
+        sidekiq_job = queue.first
+        expect(sidekiq_job.display_class).to eq("TestWorker")
+        expect(sidekiq_job.display_args).to eq(args)
+        expect(sidekiq_job.at).to be_within(1).of(run_at)
+      end
     end
   end
 end

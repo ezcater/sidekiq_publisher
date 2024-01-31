@@ -98,6 +98,8 @@ RSpec.configure do |config|
   config.after do |example|
     DatabaseCleaner.clean unless example.metadata.fetch(:skip_db_clean, false)
   end
+
+  config.include RedisHelpers
 end
 
 Shoulda::Matchers.configure do |config|
