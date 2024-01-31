@@ -11,19 +11,28 @@ module ActiveJob
       JOB_WRAPPER_CLASS = ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper.to_s.freeze
 
       def enqueue(job)
-        internal_enqueue(job)
+        if ActiveRecord::Base.connection.transaction_open?
+          create_job_record(job)
+        else
+          sidekiq_adapter.enqueue(job)
+        end
       end
 
       def enqueue_at(job, timestamp)
-        internal_enqueue(job, timestamp)
+        if ActiveRecord::Base.connection.transaction_open?
+          create_job_record(job, timestamp)
+        else
+          sidekiq_adapter.enqueue_at(job, timestamp)
+        end
       end
 
       private
 
-      def internal_enqueue(job, timestamp = nil)
+      def create_job_record(job, timestamp = nil)
         job.provider_job_id = SidekiqPublisher::Job.generate_sidekiq_jid
         attributes = job_attributes(job)
         attributes[:run_at] = timestamp if timestamp.present?
+
         SidekiqPublisher::Job.create!(attributes).job_id
       end
 
@@ -35,6 +44,10 @@ module ActiveJob
           queue: job.queue_name,
           args: [job.serialize],
         }
+      end
+
+      def sidekiq_adapter
+        @_sidekiq_adapter ||= ActiveJob::QueueAdapters::SidekiqAdapter.new
       end
     end
   end
