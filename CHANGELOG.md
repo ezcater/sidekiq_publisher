@@ -1,5 +1,9 @@
 # sidekiq_publisher
 
+## 5.0.0
+- BREAKING: Drop support for Sidekiq < 6.1.
+- Add support for ActiveSupport and ActiveJob 7.1
+
 ## 4.0.0
 - BREAKING: Enqueue directly to Redis unless in a transaction ([#74](https://github.com/ezcater/sidekiq_publisher/pull/74/))
 
