@@ -11,7 +11,7 @@ module SidekiqPublisher
     module ClassMethods
       def client_push(item)
         if SidekiqPublisher::DatabaseConnection.transaction_open?
-          SidekiqPublisher::Job.create_job!(item)
+          SidekiqPublisher::Job.create_job!(item).job_id
         else
           super
         end

@@ -31,6 +31,18 @@ RSpec.describe SidekiqPublisher::Worker do
       expect(sidekiq_job.display_class).to eq("TestWorker")
       expect(sidekiq_job.display_args).to eq(args)
     end
+
+    it "returns job ID" do
+      fake_job_id = SecureRandom.hex(12)
+      allow(SidekiqPublisher::Job).to receive(:generate_sidekiq_jid).and_return(fake_job_id)
+
+      result = TestWorker.sidekiq_client_push(
+        "class" => TestWorker,
+        "args" => args
+      )
+
+      expect(result).to eq(fake_job_id)
+    end
   end
 
   describe ".perform_async" do
@@ -47,6 +59,15 @@ RSpec.describe SidekiqPublisher::Worker do
 
         queue = Sidekiq::Queue.new("default")
         expect(queue.size).to eq(0)
+      end
+
+      it "returns job ID" do
+        fake_job_id = SecureRandom.hex(12)
+        allow(SidekiqPublisher::Job).to receive(:generate_sidekiq_jid).and_return(fake_job_id)
+
+        result = TestWorker.perform_async(*args)
+
+        expect(result).to eq(fake_job_id)
       end
     end
 
@@ -66,6 +87,15 @@ RSpec.describe SidekiqPublisher::Worker do
         sidekiq_job = queue.first
         expect(sidekiq_job.display_class).to eq("TestWorker")
         expect(sidekiq_job.display_args).to eq(args)
+      end
+
+      it "returns job ID" do
+        fake_job_id = SecureRandom.hex(12)
+        allow(SidekiqPublisher::Job).to receive(:generate_sidekiq_jid).and_return(fake_job_id)
+
+        result = TestWorker.perform_async(*args)
+
+        expect(result).to eq(fake_job_id)
       end
     end
 
