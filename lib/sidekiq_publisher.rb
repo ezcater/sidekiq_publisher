@@ -2,7 +2,7 @@
 
 # FIXES: uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger
 require "logger"
-require "activerecord"
+require "active_record"
 require "active_support"
 require "active_support/core_ext/numeric/time"
 require "sidekiq_publisher/version"

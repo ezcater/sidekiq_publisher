@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "simplecov"
 SimpleCov.start
 
-require "active_record"
+require "sidekiq_publisher"
 require "sidekiq_publisher/job"
 
 require "active_support/notifications"
