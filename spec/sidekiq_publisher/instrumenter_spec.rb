@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe SidekiqPublisher::Instrumenter, skip_db_clean: true do
+RSpec.describe SidekiqPublisher::Instrumenter, run_outside_transaction: true do
   let(:instrumenter) { described_class.new }
   let(:payload) { Hash.new[a: 1] }
 

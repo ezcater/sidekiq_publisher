@@ -50,7 +50,7 @@ RSpec.describe SidekiqPublisher::Worker do
       end
     end
 
-    context "when not in a transaction", skip_db_clean: true do
+    context "when not in a transaction", run_outside_transaction: true do
       it "does not create a SidekiqPublisher job record" do
         TestWorker.perform_async(*args)
 
@@ -135,7 +135,7 @@ RSpec.describe SidekiqPublisher::Worker do
       end
     end
 
-    context "when not in a transaction", skip_db_clean: true do
+    context "when not in a transaction", run_outside_transaction: true do
       it "does not create a SidekiqPublisher job record" do
         TestWorker.perform_in(1.hour, *args)
 
@@ -176,7 +176,7 @@ RSpec.describe SidekiqPublisher::Worker do
       end
     end
 
-    context "when not in a transaction", skip_db_clean: true do
+    context "when not in a transaction", run_outside_transaction: true do
       it "does not create a SidekiqPublisher job record" do
         TestWorker.perform_at(run_at, *args)
 

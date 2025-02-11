@@ -41,7 +41,7 @@ RSpec.describe ActiveJob::QueueAdapters::SidekiqPublisherAdapter do
       end
     end
 
-    context "when not in a transaction", skip_db_clean: true do
+    context "when not in a transaction", run_outside_transaction: true do
       it "does not create a SidekiqPublisher job record" do
         active_job.enqueue
 
@@ -86,7 +86,7 @@ RSpec.describe ActiveJob::QueueAdapters::SidekiqPublisherAdapter do
       end
     end
 
-    context "when not in a transaction", skip_db_clean: true do
+    context "when not in a transaction", run_outside_transaction: true do
       it "does not create a SidekiqPublisher job record" do
         active_job.enqueue(wait_until: scheduled_at)
 
@@ -125,7 +125,7 @@ RSpec.describe ActiveJob::QueueAdapters::SidekiqPublisherAdapter do
       end
     end
 
-    context "when not in a transaction", skip_db_clean: true do
+    context "when not in a transaction", run_outside_transaction: true do
       it "does not create a SidekiqPublisher job record" do
         job_class.perform_later(*args)
 
