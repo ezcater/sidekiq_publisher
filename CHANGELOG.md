@@ -1,6 +1,7 @@
 # sidekiq_publisher
 
-## 5.1.0
+## 6.0.0
+- BREAKING: Remove SidekiqPublisher::DatabaseConnection.transaction_open? method
 - Add stage_to_database_outside_transaction configuration option
 
 ## 5.0.0
