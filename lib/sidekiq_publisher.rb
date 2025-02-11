@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# FIXES: uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger
+require "logger"
+require "activerecord"
 require "active_support"
 require "active_support/core_ext/numeric/time"
 require "sidekiq_publisher/version"
