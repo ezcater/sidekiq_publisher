@@ -19,7 +19,7 @@ module SidekiqPublisher
   DEFAULT_JOB_RETENTION_PERIOD = 1.day.freeze
 
   class << self
-    attr_accessor :logger, :exception_reporter, :metrics_reporter
+    attr_accessor :logger, :exception_reporter, :metrics_reporter, :stage_to_database_outside_transaction
     attr_writer :batch_size, :job_retention_period
 
     def configure
@@ -36,6 +36,7 @@ module SidekiqPublisher
 
     # For test purposes
     def reset!
+      @stage_to_database_outside_transaction = nil
       @batch_size = nil
       @job_retention_period = nil
       @exception_reporter = nil

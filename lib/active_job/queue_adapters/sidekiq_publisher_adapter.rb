@@ -11,7 +11,7 @@ module ActiveJob
       JOB_WRAPPER_CLASS = ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper.to_s.freeze
 
       def enqueue(job)
-        if SidekiqPublisher::DatabaseConnection.transaction_open?
+        if SidekiqPublisher::DatabaseConnection.should_stage_to_database?
           create_job_record(job)
         else
           sidekiq_adapter.enqueue(job)
@@ -19,7 +19,7 @@ module ActiveJob
       end
 
       def enqueue_at(job, timestamp)
-        if SidekiqPublisher::DatabaseConnection.transaction_open?
+        if SidekiqPublisher::DatabaseConnection.should_stage_to_database?
           create_job_record(job, timestamp)
         else
           sidekiq_adapter.enqueue_at(job, timestamp)

@@ -69,6 +69,28 @@ RSpec.describe SidekiqPublisher::Worker do
       end
     end
 
+    context "when not in a transaction and stage_to_database_outside_transaction true", run_outside_transaction: true do
+      before do
+        SidekiqPublisher.configure do |config|
+          config.stage_to_database_outside_transaction = true
+        end
+      end
+
+      it "creates a SidekiqPublisher job record" do
+        TestWorker.perform_async(*args)
+
+        expect(job.job_class).to eq("TestWorker")
+        expect(job.args).to eq(args)
+      end
+
+      it "does not enqueue directly to Redis" do
+        TestWorker.perform_async(*args)
+
+        queue = Sidekiq::Queue.new("default")
+        expect(queue.size).to eq(0)
+      end
+    end
+
     context "when Sidekiq::Testing mode is inline" do
       let(:worker_class) do
         Class.new do
