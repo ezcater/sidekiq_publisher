@@ -1,5 +1,9 @@
 # sidekiq_publisher
 
+## 6.0.0
+- BREAKING: Remove SidekiqPublisher::DatabaseConnection.transaction_open? method
+- Add stage_to_database_outside_transaction configuration option
+
 ## 5.0.0
 - BREAKING: Drop support for Sidekiq < 6.1.
 - Add support for ActiveSupport and ActiveJob 7.1

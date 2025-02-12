@@ -19,7 +19,8 @@ publisher process handles retries and ensure that each job is delivered to Sidek
 > :warning: Not all jobs are staged in Postgres. This is determined dynamically:
 > if the job is enqueued from within an `ActiveRecord` transaction, then it is
 > staged in Postgres. If not, then it bypasses Postgres and is enqueued directly
-> to Redis via Sidekiq.
+> to Redis via Sidekiq. To opt out of this behavior configure with
+> SidekiqPublisher.configure { |c| c.stage_to_database_outside_transaction = true }
 
 ## Installation
 

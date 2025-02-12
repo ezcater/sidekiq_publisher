@@ -10,7 +10,7 @@ module SidekiqPublisher
 
     module ClassMethods
       def client_push(item)
-        if SidekiqPublisher::DatabaseConnection.transaction_open?
+        if SidekiqPublisher::DatabaseConnection.should_stage_to_database?
           SidekiqPublisher::Job.create_job!(item)
         else
           super

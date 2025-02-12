@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe SidekiqPublisher::Runner, cleaner_strategy: :truncation do
+RSpec.describe SidekiqPublisher::Runner, run_outside_transaction: true do
   let(:timeout) { 60 }
   let(:counter) { Hash.new(0) }
   let(:publisher) { instance_double(SidekiqPublisher::Publisher) }

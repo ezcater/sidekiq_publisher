@@ -50,7 +50,7 @@ RSpec.describe SidekiqPublisher::Worker do
       end
     end
 
-    context "when not in a transaction", skip_db_clean: true do
+    context "when not in a transaction", run_outside_transaction: true do
       it "does not create a SidekiqPublisher job record" do
         TestWorker.perform_async(*args)
 
@@ -66,6 +66,28 @@ RSpec.describe SidekiqPublisher::Worker do
         sidekiq_job = queue.first
         expect(sidekiq_job.display_class).to eq("TestWorker")
         expect(sidekiq_job.display_args).to eq(args)
+      end
+    end
+
+    context "when not in a transaction and stage_to_database_outside_transaction true", run_outside_transaction: true do
+      before do
+        SidekiqPublisher.configure do |config|
+          config.stage_to_database_outside_transaction = true
+        end
+      end
+
+      it "creates a SidekiqPublisher job record" do
+        TestWorker.perform_async(*args)
+
+        expect(job.job_class).to eq("TestWorker")
+        expect(job.args).to eq(args)
+      end
+
+      it "does not enqueue directly to Redis" do
+        TestWorker.perform_async(*args)
+
+        queue = Sidekiq::Queue.new("default")
+        expect(queue.size).to eq(0)
       end
     end
 
@@ -135,7 +157,7 @@ RSpec.describe SidekiqPublisher::Worker do
       end
     end
 
-    context "when not in a transaction", skip_db_clean: true do
+    context "when not in a transaction", run_outside_transaction: true do
       it "does not create a SidekiqPublisher job record" do
         TestWorker.perform_in(1.hour, *args)
 
@@ -176,7 +198,7 @@ RSpec.describe SidekiqPublisher::Worker do
       end
     end
 
-    context "when not in a transaction", skip_db_clean: true do
+    context "when not in a transaction", run_outside_transaction: true do
       it "does not create a SidekiqPublisher job record" do
         TestWorker.perform_at(run_at, *args)
 

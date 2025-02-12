@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "simplecov"
 SimpleCov.start
 
-require "active_record"
+require "sidekiq_publisher"
 require "sidekiq_publisher/job"
 
 require "active_support/notifications"
@@ -89,14 +89,16 @@ RSpec.configure do |config|
   end
 
   config.before do |example|
-    unless example.metadata.fetch(:skip_db_clean, false)
-      DatabaseCleaner.strategy = example.metadata.fetch(:cleaner_strategy, :transaction)
+    if example.metadata.fetch(:run_outside_transaction, false)
+      DatabaseCleaner.strategy = :truncation
+    else
+      DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.start
     end
   end
 
-  config.after do |example|
-    DatabaseCleaner.clean unless example.metadata.fetch(:skip_db_clean, false)
+  config.after do |_example|
+    DatabaseCleaner.clean
   end
 
   config.include RedisHelpers

@@ -2,36 +2,42 @@
 
 appraise "rails-6.1-sidekiq-6.4" do
   gem "activejob", "~> 6.1.0"
+  gem "activerecord", "~> 6.1.0"
   gem "activesupport", "~> 6.1.0"
   gem "sidekiq", "~> 6.4.1"
 end
 
 appraise "rails-6.1-sidekiq-6.5" do
   gem "activejob", "~> 6.1.0"
+  gem "activerecord", "~> 6.1.0"
   gem "activesupport", "~> 6.1.0"
   gem "sidekiq", "~> 6.5.0"
 end
 
 appraise "rails-7.0-sidekiq-6.4" do
   gem "activejob", "~> 7.0.0"
+  gem "activerecord", "~> 7.0.0"
   gem "activesupport", "~> 7.0.0"
   gem "sidekiq", "~> 6.4.1"
 end
 
 appraise "rails-7.0-sidekiq-6.5" do
   gem "activejob", "~> 7.0.0"
+  gem "activerecord", "~> 7.0.0"
   gem "activesupport", "~> 7.0.0"
   gem "sidekiq", "~> 6.5.0"
 end
 
 appraise "rails-7.1-sidekiq-6.4" do
   gem "activejob", "~> 7.1.0"
+  gem "activerecord", "~> 7.1.0"
   gem "activesupport", "~> 7.1.0"
   gem "sidekiq", "~> 6.4.1"
 end
 
 appraise "rails-7.1-sidekiq-6.5" do
   gem "activejob", "~> 7.1.0"
+  gem "activerecord", "~> 7.1.0"
   gem "activesupport", "~> 7.1.0"
   gem "sidekiq", "~> 6.5.0"
 end
