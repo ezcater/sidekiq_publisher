@@ -1,5 +1,8 @@
 # sidekiq_publisher
 
+> [!WARNING]
+> This gem has been archived by ezCater and will no longer be receiving updates.
+
 [![Gem Version][gem_badge]][gem_link]
 
 [gem_badge]: https://badge.fury.io/rb/sidekiq_publisher.svg
